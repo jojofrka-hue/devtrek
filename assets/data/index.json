@@ -1,0 +1,11 @@
+{
+  "courses": [
+    "assets/data/courses/cpp.json",
+    "assets/data/courses/c.json",
+    "assets/data/courses/python.json",
+    "assets/data/courses/java.json",
+    "assets/data/courses/javascript.json"
+  ],
+  "bugHunts": "assets/data/bug_hunts.json",
+  "placement": "assets/data/placement.json"
+}

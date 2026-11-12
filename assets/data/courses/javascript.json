@@ -1,0 +1,243 @@
+{
+  "id": "javascript",
+  "name": "JavaScript",
+  "subtitle": "The language of the web",
+  "subtitleAr": "لغة الويب",
+  "icon": "web",
+  "color": "FF4B8B",
+  "levels": [
+    {
+      "id": "javascript-1",
+      "title": "Level 1: Beginner",
+      "titleAr": "المستوى 1: مبتدئ",
+      "subtitle": "console.log, variables, types",
+      "subtitleAr": "الطباعة والمتغيرات والأنواع",
+      "intro": "JavaScript runs in the browser. Use let for changeable values, const for fixed ones, and console.log to inspect results.",
+      "introAr": "تعمل JavaScript في المتصفح. استخدم let للقيم المتغيّرة و const للثابتة، و console.log لعرض النتائج.",
+      "keyPoints": {
+        "en": ["const cannot be reassigned", "typeof reveals the type", "JavaScript is not Java"],
+        "ar": ["‏const لا يمكن إعادة إسنادها", "‏typeof تكشف النوع", "‏JavaScript ليست Java"]
+      },
+      "questions": [
+        {
+          "id": "javascript-1-1", "type": "choice", "topic": "basics",
+          "prompt": "How do you print \"Hello\" to the console?",
+          "promptAr": "كيف تطبع \"Hello\" في الطرفية؟",
+          "options": ["console.log(\"Hello\");", "print(\"Hello\");", "echo \"Hello\";", "System.out.println(\"Hello\");"],
+          "answer": 0,
+          "explanation": "console.log is the standard debugging output in JavaScript.",
+          "explanationAr": "‏console.log هي مخرج التصحيح القياسي في JavaScript."
+        },
+        {
+          "id": "javascript-1-2", "type": "choice", "topic": "variables",
+          "prompt": "Which keyword declares a variable that cannot be reassigned?",
+          "promptAr": "أي كلمة تُعلن متغيراً لا يمكن إعادة إسناده؟",
+          "options": ["var", "let", "const", "fixed"],
+          "answer": 2,
+          "explanation": "const creates a binding that cannot be reassigned; let can change.",
+          "explanationAr": "‏const تنشئ ارتباطاً لا يُعاد إسناده، بينما let قابلة للتغيير."
+        },
+        {
+          "id": "javascript-1-3", "type": "choice", "topic": "basics",
+          "prompt": "True or false: JavaScript and Java are the same language.",
+          "promptAr": "صح أم خطأ: JavaScript و Java لغتان متطابقتان.",
+          "options": ["True", "False"],
+          "answer": 1,
+          "explanation": "They are unrelated languages that share part of a name for historical marketing reasons.",
+          "explanationAr": "لغتان غير مرتبطتين، ويشتركان جزئياً في الاسم لأسباب تسويقية تاريخية."
+        },
+        {
+          "id": "javascript-1-4", "type": "order", "topic": "basics",
+          "prompt": "Arrange the pieces to print Hello.",
+          "promptAr": "رتّب القطع لطباعة Hello.",
+          "options": ["console.log(", "\"Hello\"", ");"],
+          "explanation": "console.log(\"Hello\"); — call, text, close and semicolon.",
+          "explanationAr": "‏‎console.log(\"Hello\");‎ أي الاستدعاء ثم النص ثم الإغلاق والفاصلة المنقوطة."
+        },
+        {
+          "id": "javascript-1-5", "type": "match", "topic": "types",
+          "prompt": "Match each type with its meaning.",
+          "promptAr": "طابِق كل نوع بمعناه.",
+          "pairs": [["string", "text"], ["number", "numeric value"], ["boolean", "true or false"], ["undefined", "no value assigned"]],
+          "explanation": "JavaScript has one number type for integers and decimals, plus undefined for unassigned variables.",
+          "explanationAr": "‏JavaScript لها نوع number واحد للصحيح والعشري، و undefined للمتغير غير المُسنَد."
+        },
+        {
+          "id": "javascript-1-6", "type": "choice", "topic": "basics",
+          "prompt": "How do you write a single-line comment in JavaScript?",
+          "promptAr": "كيف تكتب تعليقاً من سطر واحد في JavaScript؟",
+          "options": ["# comment", "// comment", "-- comment", "<!-- comment -->"],
+          "answer": 1,
+          "explanation": "// comments the rest of the line; /* ... */ is a block comment.",
+          "explanationAr": "‏// تعلّق بقية السطر، و /* ... */ تعليق كتلة."
+        },
+        {
+          "id": "javascript-1-7", "type": "choice", "topic": "types",
+          "prompt": "What does typeof 5 return?",
+          "promptAr": "ماذا تُعيد typeof 5؟",
+          "options": ["'number'", "'int'", "'float'", "'digit'"],
+          "answer": 0,
+          "explanation": "All numbers in JavaScript, integers or decimals, have type 'number'.",
+          "explanationAr": "كل الأعداد في JavaScript، صحيحة أو عشرية، نوعها 'number'."
+        }
+      ]
+    },
+    {
+      "id": "javascript-2",
+      "title": "Level 2: Intermediate",
+      "titleAr": "المستوى 2: متوسط",
+      "subtitle": "Functions, arrays, comparison",
+      "subtitleAr": "الدوال والمصفوفات والمقارنة",
+      "intro": "JavaScript compares loosely with == and strictly with ===. Array methods such as map and filter return new arrays.",
+      "introAr": "تقارن JavaScript بـ == بشكل مرن وبـ === بشكل صارم، ودوال المصفوفات مثل map و filter تُعيد مصفوفات جديدة.",
+      "keyPoints": {
+        "en": ["== converts types, === does not", "map transforms every item", "Arrow functions use =>"],
+        "ar": ["‏== تحوّل الأنواع و === لا تفعل", "‏map تحوّل كل عنصر", "دوال السهم تستخدم =>"]
+      },
+      "questions": [
+        {
+          "id": "javascript-2-1", "type": "choice", "topic": "control",
+          "prompt": "What does this code print?",
+          "promptAr": "ماذا يطبع هذا الكود؟",
+          "code": "let a = 5;\nlet b = \"5\";\nconsole.log(a == b);",
+          "options": ["true", "false", "undefined", "Error"],
+          "answer": 0,
+          "explanation": "== converts the string to a number, so 5 == \"5\" is true. === would be false.",
+          "explanationAr": "‏== تحوّل النص إلى عدد فيكون ‎5 == \"5\"‎ صحيحاً، بينما === تعطي false."
+        },
+        {
+          "id": "javascript-2-2", "type": "choice", "topic": "control",
+          "prompt": "What does === check?",
+          "promptAr": "ماذا تفحص ===؟",
+          "options": ["Only the value", "Value and type", "Only the type", "Nothing"],
+          "answer": 1,
+          "explanation": "Strict equality requires both the same value and the same type.",
+          "explanationAr": "المساواة الصارمة تشترط القيمة والنوع معاً."
+        },
+        {
+          "id": "javascript-2-3", "type": "choice", "topic": "arrays",
+          "prompt": "Which method adds an item to the end of an array?",
+          "promptAr": "أي دالة تُضيف عنصراً إلى نهاية المصفوفة؟",
+          "options": ["add()", "push()", "append()", "insert()"],
+          "answer": 1,
+          "explanation": "push() appends to the end and returns the new length.",
+          "explanationAr": "‏push() تضيف في النهاية وتُعيد الطول الجديد."
+        },
+        {
+          "id": "javascript-2-4", "type": "order", "topic": "functions",
+          "prompt": "Arrange the pieces to define a function.",
+          "promptAr": "رتّب القطع لتعريف دالة.",
+          "options": ["function", "add(a, b)", "{", "return a + b;", "}"],
+          "explanation": "function name(params) { ... return ... }",
+          "explanationAr": "الترتيب: ‎function add(a, b) { return a + b; }‎"
+        },
+        {
+          "id": "javascript-2-5", "type": "match", "topic": "arrays",
+          "prompt": "Match each array method with its job.",
+          "promptAr": "طابِق كل دالة مصفوفة بوظيفتها.",
+          "pairs": [["map", "transform every item"], ["filter", "keep matching items"], ["push", "add to the end"], ["length", "number of items"]],
+          "explanation": "map transforms, filter selects, push appends, length counts.",
+          "explanationAr": "‏map تحوّل، filter تنتقي، push تُضيف، length تعدّ."
+        },
+        {
+          "id": "javascript-2-6", "type": "choice", "topic": "variables",
+          "prompt": "Find the bug in this code.",
+          "promptAr": "اكتشف الخطأ في هذا الكود.",
+          "code": "const x = 1;\nx = 2;",
+          "options": ["Cannot reassign a const", "Missing semicolon", "x is not defined", "There is no bug"],
+          "answer": 0,
+          "explanation": "const bindings are read-only; use let if the value must change.",
+          "explanationAr": "ارتباطات const للقراءة فقط، واستخدم let إن كانت القيمة ستتغيّر."
+        },
+        {
+          "id": "javascript-2-7", "type": "choice", "topic": "functions",
+          "prompt": "Which line creates an arrow function?",
+          "promptAr": "أي سطر يُنشئ دالة سهم؟",
+          "options": ["const f = () => 1;", "const f -> 1;", "function => f() 1;", "const f = () -> 1;"],
+          "answer": 0,
+          "explanation": "Arrow functions use =>, e.g. const f = () => 1;",
+          "explanationAr": "دوال السهم تستخدم => مثل ‎const f = () => 1;‎"
+        }
+      ]
+    },
+    {
+      "id": "javascript-3",
+      "title": "Level 3: Advanced",
+      "titleAr": "المستوى 3: متقدم",
+      "subtitle": "Promises, async, array tricks",
+      "subtitleAr": "الوعود والبرمجة غير المتزامنة وحيل المصفوفات",
+      "intro": "Promises represent future values. async/await lets you write asynchronous code that looks sequential.",
+      "introAr": "الوعود (Promises) تمثّل قيماً مستقبلية، و async/await يسمح بكتابة شيفرة غير متزامنة تبدو متسلسلة.",
+      "keyPoints": {
+        "en": ["A Promise resolves or rejects later", "await pauses inside async functions", "typeof null is 'object'"],
+        "ar": ["الوعد يُحل أو يُرفض لاحقاً", "‏await تنتظر داخل دالة async", "‏typeof null‎ تساوي 'object'"]
+      },
+      "questions": [
+        {
+          "id": "javascript-3-1", "type": "choice", "topic": "types",
+          "prompt": "What does this code print?",
+          "promptAr": "ماذا يطبع هذا الكود؟",
+          "code": "console.log(typeof null);",
+          "options": ["'null'", "'object'", "'undefined'", "'number'"],
+          "answer": 1,
+          "explanation": "typeof null is 'object' — a famous historical bug in JavaScript that was never fixed.",
+          "explanationAr": "‏typeof null‎ تعطي 'object'، وهو خطأ تاريخي شهير في JavaScript لم يُصلَح."
+        },
+        {
+          "id": "javascript-3-2", "type": "choice", "topic": "async",
+          "prompt": "What does a Promise represent?",
+          "promptAr": "ماذا يمثّل الـ Promise؟",
+          "options": ["A value that will be available later", "A loop", "A type of string", "A CSS rule"],
+          "answer": 0,
+          "explanation": "A Promise is pending, then fulfilled or rejected with a result.",
+          "explanationAr": "الوعد يكون معلّقاً ثم يُنجَز أو يُرفض بنتيجة."
+        },
+        {
+          "id": "javascript-3-3", "type": "choice", "topic": "async",
+          "prompt": "Which keyword pauses an async function until a Promise finishes?",
+          "promptAr": "أي كلمة تُوقف دالة async حتى ينتهي الـ Promise؟",
+          "options": ["wait", "pause", "await", "then"],
+          "answer": 2,
+          "explanation": "await waits for the promise and unwraps its resolved value.",
+          "explanationAr": "‏await تنتظر الوعد وتستخرج قيمته المُنجَزة."
+        },
+        {
+          "id": "javascript-3-4", "type": "order", "topic": "arrays",
+          "prompt": "Arrange the pieces to double every number.",
+          "promptAr": "رتّب القطع لمضاعفة كل عدد.",
+          "options": ["const", "doubled", "=", "nums.map(n => n * 2);"],
+          "explanation": "const doubled = nums.map(n => n * 2);",
+          "explanationAr": "الترتيب: ‎const doubled = nums.map(n => n * 2);‎"
+        },
+        {
+          "id": "javascript-3-5", "type": "match", "topic": "async",
+          "prompt": "Match each term with its meaning.",
+          "promptAr": "طابِق كل مصطلح بمعناه.",
+          "pairs": [["Promise", "future value"], ["async/await", "cleaner async code"], ["JSON", "data format"], ["DOM", "page structure"]],
+          "explanation": "Promises hold future values, async/await styles them, JSON is text data, the DOM models the page.",
+          "explanationAr": "الوعود تحمل قيماً مستقبلية، و async/await يبسّطها، و JSON صيغة بيانات، و DOM يمثّل بنية الصفحة."
+        },
+        {
+          "id": "javascript-3-6", "type": "choice", "topic": "arrays",
+          "prompt": "What does this code print?",
+          "promptAr": "ماذا يطبع هذا الكود؟",
+          "code": "console.log([1, 2, 3].map(n => n * 2));",
+          "options": ["[2, 4, 6]", "[1, 2, 3]", "6", "Error"],
+          "answer": 0,
+          "explanation": "map returns a new array with each element doubled.",
+          "explanationAr": "‏map تُعيد مصفوفة جديدة بكل عنصر مضاعف."
+        },
+        {
+          "id": "javascript-3-7", "type": "choice", "topic": "variables",
+          "prompt": "What is wrong with this code?",
+          "promptAr": "ما الخطأ في هذا الكود؟",
+          "code": "console.log(a);\nlet a = 5;",
+          "options": ["a is used before it is declared", "Missing semicolon", "let is wrong", "Nothing"],
+          "answer": 0,
+          "explanation": "let is hoisted but not initialised, so reading it first throws a ReferenceError (TDZ).",
+          "explanationAr": "‏let تُرفَع لكن دون تهيئة، فقراءتها أولاً ترفع ReferenceError بسبب المنطقة الميتة (TDZ)."
+        }
+      ]
+    }
+  ]
+}

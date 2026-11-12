@@ -1,0 +1,242 @@
+{
+  "id": "python",
+  "name": "Python",
+  "subtitle": "Easy syntax, powerful ideas",
+  "subtitleAr": "صياغة سهلة وأفكار قوية",
+  "icon": "data_object",
+  "color": "FFC800",
+  "levels": [
+    {
+      "id": "python-1",
+      "title": "Level 1: Beginner",
+      "titleAr": "المستوى 1: مبتدئ",
+      "subtitle": "print, variables, types",
+      "subtitleAr": "الطباعة والمتغيرات والأنواع",
+      "intro": "Python reads almost like English: no semicolons, and indentation defines blocks of code.",
+      "introAr": "تقرأ Python كالإنجليزية تقريباً: لا فواصل منقوطة، والإزاحة (indentation) تحدد كتل الشيفرة.",
+      "keyPoints": {
+        "en": ["print() writes to the screen", "Indentation replaces braces", "# starts a comment"],
+        "ar": ["‏print() تطبع على الشاشة", "الإزاحة تُغني عن الأقواس المعقوفة", "الرمز # يبدأ تعليقاً"]
+      },
+      "questions": [
+        {
+          "id": "python-1-1", "type": "choice", "topic": "basics",
+          "prompt": "How do you print \"Hello\" in Python?",
+          "promptAr": "كيف تطبع \"Hello\" في بايثون؟",
+          "options": ["echo \"Hello\"", "print(\"Hello\")", "cout << \"Hello\"", "printf(\"Hello\");"],
+          "answer": 1,
+          "explanation": "print(\"Hello\") displays text. Python 3 always uses function-call syntax.",
+          "explanationAr": "‏print(\"Hello\") تعرض النص، وبيثون 3 تستخدم دائماً صيغة استدعاء الدالة."
+        },
+        {
+          "id": "python-1-2", "type": "choice", "topic": "variables",
+          "prompt": "Which line creates a variable x equal to 5?",
+          "promptAr": "أي سطر يُنشئ متغيراً x قيمته 5؟",
+          "options": ["x = 5", "int x = 5;", "var x = 5", "let x = 5"],
+          "answer": 0,
+          "explanation": "Python is dynamically typed: x = 5 creates the variable without declaring a type.",
+          "explanationAr": "بايثون لغة ديناميكية الأنواع: ‎x = 5‎ تُنشئ المتغير دون تصريح بالنوع."
+        },
+        {
+          "id": "python-1-3", "type": "choice", "topic": "basics",
+          "prompt": "True or false: Python uses indentation to define blocks of code.",
+          "promptAr": "صح أم خطأ: تستخدم بايثون الإزاحة لتحديد كتل الشيفرة.",
+          "options": ["True", "False"],
+          "answer": 0,
+          "explanation": "Indentation is syntax in Python, not just style. Mixed tabs and spaces cause errors.",
+          "explanationAr": "الإزاحة جزء من صياغة اللغة وليست تنسيقاً فقط، وخلط المسافات والجداول يسبب أخطاء."
+        },
+        {
+          "id": "python-1-4", "type": "order", "topic": "basics",
+          "prompt": "Arrange the pieces to print Hello.",
+          "promptAr": "رتّب القطع لطباعة Hello.",
+          "options": ["print(", "\"Hello\"", ")"],
+          "explanation": "In Python the call is simply print(\"Hello\") with no semicolon.",
+          "explanationAr": "في بايثون الاستدعاء بسيط: ‎print(\"Hello\")‎ دون فاصلة منقوطة."
+        },
+        {
+          "id": "python-1-5", "type": "match", "topic": "types",
+          "prompt": "Match each type with what it stores.",
+          "promptAr": "طابِق كل نوع بما يخزّنه.",
+          "pairs": [["int", "whole number"], ["float", "decimal number"], ["str", "text"], ["bool", "True or False"]],
+          "explanation": "int, float, str and bool are the basic Python types; type(x) reveals the type.",
+          "explanationAr": "‏int و float و str و bool هي الأنواع الأساسية، والدالة type(x) تكشف النوع."
+        },
+        {
+          "id": "python-1-6", "type": "choice", "topic": "basics",
+          "prompt": "How do you write a comment in Python?",
+          "promptAr": "كيف تكتب تعليقاً في بايثون؟",
+          "options": ["// comment", "/* comment */", "# comment", "-- comment"],
+          "answer": 2,
+          "explanation": "# starts a comment until the end of the line. Python has no // comments.",
+          "explanationAr": "الرمز # يبدأ تعليقاً حتى نهاية السطر، وليس لبايثون تعليقات //."
+        },
+        {
+          "id": "python-1-7", "type": "choice", "topic": "control",
+          "prompt": "What is the result of 2 + 3 * 4?",
+          "promptAr": "ما ناتج 2 + 3 * 4؟",
+          "options": ["20", "14", "24", "9"],
+          "answer": 1,
+          "explanation": "Multiplication runs before addition: 3 * 4 = 12, then 2 + 12 = 14.",
+          "explanationAr": "الضرب قبل الجمع: 3 × 4 = 12 ثم 2 + 12 = 14."
+        }
+      ]
+    },
+    {
+      "id": "python-2",
+      "title": "Level 2: Intermediate",
+      "titleAr": "المستوى 2: متوسط",
+      "subtitle": "Loops, lists, conditions",
+      "subtitleAr": "الحلقات والقوائم والشروط",
+      "intro": "for loops walk over sequences such as range(3) or a list, and a colon opens every block.",
+      "introAr": "حلقة for تمرّ على التسلسلات مثل range(3) أو القائمة، والنقطتان تفتحان كل كتلة.",
+      "keyPoints": {
+        "en": ["range(n) gives 0..n-1", "A block starts with a colon :", "Lists are ordered and changeable"],
+        "ar": ["‏range(n) تعطي من 0 إلى n-1", "الكتلة تبدأ بنقطتين :", "القوائم مرتبة وقابلة للتعديل"]
+      },
+      "questions": [
+        {
+          "id": "python-2-1", "type": "choice", "topic": "loops",
+          "prompt": "What does this code print?",
+          "promptAr": "ماذا يطبع هذا الكود؟",
+          "code": "for i in range(3):\n    print(i)",
+          "options": ["0 1 2", "1 2 3", "0 1 2 3", "3"],
+          "answer": 0,
+          "explanation": "range(3) yields 0, 1 and 2 — three values, starting at zero.",
+          "explanationAr": "‏range(3) تُنتج 0 و1 و2، أي ثلاثة قيم تبدأ من الصفر."
+        },
+        {
+          "id": "python-2-2", "type": "choice", "topic": "arrays",
+          "prompt": "Which method adds an item to the end of a list?",
+          "promptAr": "أي دالة تُضيف عنصراً إلى نهاية القائمة؟",
+          "options": ["add()", "append()", "push()", "insert_end()"],
+          "answer": 1,
+          "explanation": "append() adds one item to the end; extend() adds many.",
+          "explanationAr": "‏append() تضيف عنصراً واحداً في النهاية، و extend() تضيف عدة عناصر."
+        },
+        {
+          "id": "python-2-3", "type": "order", "topic": "loops",
+          "prompt": "Arrange the pieces to print 0 to 4.",
+          "promptAr": "رتّب القطع لطباعة الأعداد من 0 إلى 4.",
+          "options": ["for", "i", "in", "range(5):", "print(i)"],
+          "explanation": "for i in range(5): then an indented print(i).",
+          "explanationAr": "‏for i in range(5):‎ ثم print(i) بإزاحة داخل الحلقة."
+        },
+        {
+          "id": "python-2-4", "type": "match", "topic": "types",
+          "prompt": "Match each data type with its description.",
+          "promptAr": "طابِق كل نوع بيانات بوصفه.",
+          "pairs": [["list", "ordered, changeable"], ["tuple", "ordered, unchangeable"], ["dict", "key-value pairs"], ["set", "unique items"]],
+          "explanation": "Lists and tuples are ordered; tuples are immutable. dicts map keys to values; sets keep unique items.",
+          "explanationAr": "القوائم والـ tuple مرتبة لكن tuple غير قابلة للتعديل، و dict يربط مفتاحاً بقيمة، و set يحتفظ بعناصر فريدة."
+        },
+        {
+          "id": "python-2-5", "type": "choice", "topic": "control",
+          "prompt": "Find the bug in this code.",
+          "promptAr": "اكتشف الخطأ في هذا الكود.",
+          "code": "if x == 5\n    print(\"five\")",
+          "options": ["Missing colon after 5", "Wrong indentation", "print is wrong", "There is no bug"],
+          "answer": 0,
+          "explanation": "The if line must end with a colon before its indented block.",
+          "explanationAr": "سطر if يجب أن ينتهي بنقطتين قبل الكتلة المُزاحة."
+        },
+        {
+          "id": "python-2-6", "type": "choice", "topic": "arrays",
+          "prompt": "What does len([1, 2, 3]) return?",
+          "promptAr": "ماذا تُعيد len([1, 2, 3])؟",
+          "options": ["2", "3", "4", "Error"],
+          "answer": 1,
+          "explanation": "len counts the items, and the list has three.",
+          "explanationAr": "‏len تعدّ العناصر، والقائمة تحتوي ثلاثة عناصر."
+        },
+        {
+          "id": "python-2-7", "type": "choice", "topic": "control",
+          "prompt": "Which keyword means \"else if\" in Python?",
+          "promptAr": "أي كلمة تعني \"else if\" في بايثون؟",
+          "options": ["elseif", "else if", "elif", "elsif"],
+          "answer": 2,
+          "explanation": "Python uses elif for chained conditions.",
+          "explanationAr": "تستخدم بايثون elif للشروط المتسلسلة."
+        }
+      ]
+    },
+    {
+      "id": "python-3",
+      "title": "Level 3: Advanced",
+      "titleAr": "المستوى 3: متقدم",
+      "subtitle": "Functions, comprehensions, errors",
+      "subtitleAr": "الدوال والاستيعابات والأخطاء",
+      "intro": "Functions are defined with def, comprehensions build collections in one line, and try/except handles errors.",
+      "introAr": "تُعرّف الدوال بـ def، وتبني الاستيعابات (comprehensions) المجموعات في سطر واحد، وتعامل try/except مع الأخطاء.",
+      "keyPoints": {
+        "en": ["def name(params): defines a function", "List comprehensions transform items", "except catches a raised error"],
+        "ar": ["‏def name(params):‎ تعرّف دالة", "استيعاب القوائم يحوّل العناصر", "‏except تلتقط الخطأ المرفوع"]
+      },
+      "questions": [
+        {
+          "id": "python-3-1", "type": "choice", "topic": "functions",
+          "prompt": "What does this code print?",
+          "promptAr": "ماذا يطبع هذا الكود؟",
+          "code": "def f(x):\n    return x * 2\nprint(f(4))",
+          "options": ["4", "8", "f(4)", "Error"],
+          "answer": 1,
+          "explanation": "f(4) returns 4 * 2 = 8, and print shows it.",
+          "explanationAr": "‏f(4) تُعيد 4 × 2 = 8، و print تعرضه."
+        },
+        {
+          "id": "python-3-2", "type": "choice", "topic": "loops",
+          "prompt": "What does [x * 2 for x in [1, 2, 3]] give?",
+          "promptAr": "ما ناتج [x * 2 for x in [1, 2, 3]]؟",
+          "options": ["[2, 4, 6]", "[1, 2, 3]", "[1, 4, 9]", "6"],
+          "answer": 0,
+          "explanation": "The comprehension doubles each item, producing a new list [2, 4, 6].",
+          "explanationAr": "الاستيعاب يضاعف كل عنصر فينتج قائمة جديدة [2, 4, 6]."
+        },
+        {
+          "id": "python-3-3", "type": "choice", "topic": "errors",
+          "prompt": "What is try / except used for?",
+          "promptAr": "فيما يُستخدم try / except؟",
+          "options": ["Handling errors", "Looping", "Importing modules", "Defining classes"],
+          "answer": 0,
+          "explanation": "try runs risky code; except handles the exception instead of crashing.",
+          "explanationAr": "‏try تنفّذ شيفرة قد تفشل، و except تعالج الاستثناء بدل انهيار البرنامج."
+        },
+        {
+          "id": "python-3-4", "type": "order", "topic": "functions",
+          "prompt": "Arrange the pieces to define a function.",
+          "promptAr": "رتّب القطع لتعريف دالة.",
+          "options": ["def", "greet(name):", "return", "\"Hi \" + name"],
+          "explanation": "def, then the name and parameters, a colon, and the return expression.",
+          "explanationAr": "‏def ثم اسم الدالة والمعاملات ثم النقطتان ثم تعبير الإرجاع."
+        },
+        {
+          "id": "python-3-5", "type": "match", "topic": "objects",
+          "prompt": "Match each keyword with its job.",
+          "promptAr": "طابِق كل كلمة مفتاحية بوظيفتها.",
+          "pairs": [["import", "load a module"], ["lambda", "small anonymous function"], ["self", "refers to the object"], ["__init__", "constructor"]],
+          "explanation": "import loads modules, lambda makes short functions, self is the instance, __init__ initialises objects.",
+          "explanationAr": "‏import يحمّل وحدة، lambda دالة قصيرة، self يشير إلى الكائن، __init__ منشئ الكائن."
+        },
+        {
+          "id": "python-3-6", "type": "choice", "topic": "arrays",
+          "prompt": "What does \"abc\"[::-1] give?",
+          "promptAr": "ما ناتج \"abc\"[::-1]؟",
+          "options": ["'cba'", "'abc'", "'bca'", "Error"],
+          "answer": 0,
+          "explanation": "A step of -1 walks the string backwards, reversing it.",
+          "explanationAr": "الخطوة -1 تسير في النص بالعكس فتقلبه."
+        },
+        {
+          "id": "python-3-7", "type": "choice", "topic": "errors",
+          "prompt": "What happens when you run this code?",
+          "promptAr": "ماذا يحدث عند تشغيل هذا الكود؟",
+          "code": "numbers = [1, 2, 3]\nprint(numbers[3])",
+          "options": ["IndexError: out of range", "Prints 3", "Prints None", "Nothing"],
+          "answer": 0,
+          "explanation": "Indexes run 0..2, so index 3 raises an IndexError.",
+          "explanationAr": "الفهارس من 0 إلى 2، لذا الفهرس 3 يرفع خطأ IndexError."
+        }
+      ]
+    }
+  ]
+}

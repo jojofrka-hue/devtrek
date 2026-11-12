@@ -1,0 +1,243 @@
+{
+  "id": "c",
+  "name": "C",
+  "subtitle": "printf, pointers, memory",
+  "subtitleAr": "الطباعة والمؤشرات والذاكرة",
+  "icon": "terminal",
+  "color": "7A5CFF",
+  "levels": [
+    {
+      "id": "c-1",
+      "title": "Level 1: Beginner",
+      "titleAr": "المستوى 1: مبتدئ",
+      "subtitle": "printf, scanf, types",
+      "subtitleAr": "الطباعة والقراءة والأنواع",
+      "intro": "C talks to the screen and keyboard through functions from <stdio.h> such as printf and scanf. Types decide how many bytes a value uses.",
+      "introAr": "تتعامل لغة C مع الشاشة ولوحة المفاتيح عبر دوال من <stdio.h> مثل printf و scanf، والأنواع تحدد حجم القيمة بالبايت.",
+      "keyPoints": {
+        "en": ["printf needs <stdio.h>", "Format specifiers start with %", "scanf reads keyboard input"],
+        "ar": ["‏printf تحتاج <stdio.h>", "محددات التنسيق تبدأ بـ %", "‏scanf تقرأ من لوحة المفاتيح"]
+      },
+      "questions": [
+        {
+          "id": "c-1-1", "type": "choice", "topic": "basics",
+          "prompt": "Which header is needed for printf?",
+          "promptAr": "أي ملف رأس (header) يلزم لاستخدام printf؟",
+          "options": ["<iostream>", "<stdio.h>", "<string>", "<conio>"],
+          "answer": 1,
+          "explanation": "printf is declared in <stdio.h>. <iostream> belongs to C++.",
+          "explanationAr": "‏printf معرّفة في <stdio.h>، أما <iostream> فتخص لغة ++C."
+        },
+        {
+          "id": "c-1-2", "type": "choice", "topic": "basics",
+          "prompt": "How do you print \"Hello\" in C?",
+          "promptAr": "كيف تطبع \"Hello\" في لغة C؟",
+          "options": ["cout << \"Hello\";", "print(\"Hello\")", "printf(\"Hello\");", "echo \"Hello\";"],
+          "answer": 2,
+          "explanation": "printf(\"Hello\"); is the C way. cout is C++ and print/echo are other languages.",
+          "explanationAr": "الطريقة الصحيحة في C هي ‏printf(\"Hello\");‎، أما cout فخاصة بـ ++C و print/echo من لغات أخرى."
+        },
+        {
+          "id": "c-1-3", "type": "choice", "topic": "variables",
+          "prompt": "Fill the blank to print an integer.",
+          "promptAr": "أكمل الفراغ لطباعة عدد صحيح.",
+          "code": "printf(\"%____\", 5);",
+          "options": ["d", "s", "f", "c"],
+          "answer": 0,
+          "explanation": "%d prints integers, %s strings, %f floats and %c characters.",
+          "explanationAr": "‏%d لطباعة الصحيح، %s للنص، %f للعشري، %c للحرف."
+        },
+        {
+          "id": "c-1-4", "type": "choice", "topic": "basics",
+          "prompt": "True or false: C is case-sensitive.",
+          "promptAr": "صح أم خطأ: لغة C حساسة لحالة الأحرف.",
+          "options": ["True", "False"],
+          "answer": 0,
+          "explanation": "int and Int are different; case sensitivity is a common source of errors.",
+          "explanationAr": "‏int و Int مختلفان، وحساسية الحالة من أكثر مصادر الأخطاء شيوعاً."
+        },
+        {
+          "id": "c-1-5", "type": "order", "topic": "basics",
+          "prompt": "Arrange the pieces to print Hello.",
+          "promptAr": "رتّب القطع لطباعة Hello.",
+          "options": ["printf(", "\"Hello\"", ")", ";"],
+          "explanation": "printf takes the text in quotes, closes the call, then the semicolon ends the statement.",
+          "explanationAr": "‏printf تأخذ النص بين علامتي تنصيص، ثم تُغلق القوس، ثم الفاصلة المنقوطة لإنهاء الجملة."
+        },
+        {
+          "id": "c-1-6", "type": "match", "topic": "types",
+          "prompt": "Match each format specifier with its type.",
+          "promptAr": "طابِق كل محدد تنسيق بنوعه.",
+          "pairs": [["%d", "int"], ["%f", "float"], ["%c", "char"], ["%s", "string"]],
+          "explanation": "d = decimal integer, f = float, c = char, s = string.",
+          "explanationAr": "‏d للعدد الصحيح، f للعشري، c للحرف، s للنص."
+        },
+        {
+          "id": "c-1-7", "type": "choice", "topic": "variables",
+          "prompt": "Which function reads input from the keyboard?",
+          "promptAr": "أي دالة تقرأ المُدخل من لوحة المفاتيح؟",
+          "options": ["scanf", "cin", "input", "readline"],
+          "answer": 0,
+          "explanation": "scanf reads formatted input, e.g. scanf(\"%d\", &x); — do not forget the &.",
+          "explanationAr": "‏scanf تقرأ مُدخلاً منسّقاً مثل ‎scanf(\"%d\", &x);‎ ولا تنسَ الرمز &."
+        }
+      ]
+    },
+    {
+      "id": "c-2",
+      "title": "Level 2: Intermediate",
+      "titleAr": "المستوى 2: متوسط",
+      "subtitle": "Loops, arrays, conditions",
+      "subtitleAr": "الحلقات والمصفوفات والشروط",
+      "intro": "C loops and arrays are close to memory: an array is a contiguous block, and the index decides which cell you touch.",
+      "introAr": "الحلقات والمصفوفات في C قريبة من الذاكرة: المصفوفة كتلة متجاورة، والفهرس يحدد الخلية التي تستخدمها.",
+      "keyPoints": {
+        "en": ["break leaves a loop immediately", "if needs == not =", "Strings end with '\\0'"],
+        "ar": ["‏break تخرج من الحلقة فوراً", "الشرط يحتاج == لا =", "النصوص تنتهي بالرمز '\\0'"]
+      },
+      "questions": [
+        {
+          "id": "c-2-1", "type": "choice", "topic": "control",
+          "prompt": "What does this code print?",
+          "promptAr": "ماذا يطبع هذا الكود؟",
+          "code": "int x = 7;\nprintf(\"%d\", x % 3);",
+          "options": ["1", "2", "0", "7"],
+          "answer": 0,
+          "explanation": "7 % 3 is the remainder of 7 ÷ 3, which is 1.",
+          "explanationAr": "‏7 % 3 هو باقي قسمة 7 على 3، والناتج 1."
+        },
+        {
+          "id": "c-2-2", "type": "choice", "topic": "arrays",
+          "prompt": "How do you declare an array of 5 integers?",
+          "promptAr": "كيف تُعرّف مصفوفة من 5 أعداد صحيحة؟",
+          "options": ["int a[5];", "array a(5);", "int[5] a;", "a = int(5);"],
+          "answer": 0,
+          "explanation": "In C the size goes inside brackets after the name: int a[5];.",
+          "explanationAr": "في C يوضع الحجم بين قوسين بعد الاسم: ‎int a[5];‎."
+        },
+        {
+          "id": "c-2-3", "type": "choice", "topic": "loops",
+          "prompt": "Which keyword exits a loop immediately?",
+          "promptAr": "أي كلمة مفتاحية تُنهي الحلقة فوراً؟",
+          "options": ["stop", "break", "exit", "end"],
+          "answer": 1,
+          "explanation": "break stops the innermost loop; continue skips to the next iteration.",
+          "explanationAr": "‏break توقف الحلقة الحالية، و continue تتخطى إلى الدورة التالية."
+        },
+        {
+          "id": "c-2-4", "type": "order", "topic": "control",
+          "prompt": "Arrange the pieces to print only positive numbers.",
+          "promptAr": "رتّب القطع لطباعة الأعداد الموجبة فقط.",
+          "options": ["if", "(x > 0)", "{", "printf(\"Positive\");", "}"],
+          "explanation": "if takes a condition in parentheses, then a block of code in braces.",
+          "explanationAr": "‏if تأخذ الشرط بين قوسين، ثم كتلة الشيفرة بين قوسين معقوفين."
+        },
+        {
+          "id": "c-2-5", "type": "match", "topic": "memory",
+          "prompt": "Match each symbol with its meaning.",
+          "promptAr": "طابِق كل رمز بمعناه.",
+          "pairs": [["&", "address of"], ["*", "dereference"], ["sizeof", "size in bytes"], ["++", "increment"]],
+          "explanation": "&x is the address of x, *p reads through a pointer, sizeof gives bytes, ++ adds one.",
+          "explanationAr": "‏&x عنوان المتغير، *p قراءة عبر مؤشر، sizeof عدد البايتات، ++ زيادة بمقدار واحد."
+        },
+        {
+          "id": "c-2-6", "type": "choice", "topic": "control",
+          "prompt": "Find the bug in this code.",
+          "promptAr": "اكتشف الخطأ في هذا الكود.",
+          "code": "int x = 5;\nif (x = 10) printf(\"Ten\");",
+          "options": ["= should be ==", "Missing semicolon", "printf is wrong", "There is no bug"],
+          "answer": 0,
+          "explanation": "x = 10 assigns 10 instead of comparing; the condition should be x == 10.",
+          "explanationAr": "‏x = 10 إسناد لا مقارنة، والصحيح أن يكون الشرط x == 10."
+        },
+        {
+          "id": "c-2-7", "type": "choice", "topic": "arrays",
+          "prompt": "Which character ends a string in C?",
+          "promptAr": "أي رمز يُنهي النص (string) في C؟",
+          "options": ["'\\0'", "'\\n'", "'.'", "';'"],
+          "answer": 0,
+          "explanation": "C strings are arrays of chars terminated by the null character '\\0'.",
+          "explanationAr": "نصوص C مصفوفات أحرف تنتهي بمحرف الصفر '\\0'."
+        }
+      ]
+    },
+    {
+      "id": "c-3",
+      "title": "Level 3: Advanced",
+      "titleAr": "المستوى 3: متقدم",
+      "subtitle": "Pointers, malloc, structs",
+      "subtitleAr": "المؤشرات والحجز الديناميكي والبنى",
+      "intro": "Dynamic memory is requested with malloc and returned with free. Using memory after free is a serious bug.",
+      "introAr": "تُطلب الذاكرة الديناميكية بـ malloc وتُعاد بـ free، واستخدام الذاكرة بعد تحريرها خطأ خطير.",
+      "keyPoints": {
+        "en": ["malloc returns a pointer, or NULL on failure", "Every malloc needs a free", "Never use a pointer after free"],
+        "ar": ["‏malloc تُعيد مؤشراً أو NULL عند الفشل", "كل malloc تحتاج free", "لا تستخدم المؤشر بعد تحريره"]
+      },
+      "questions": [
+        {
+          "id": "c-3-1", "type": "choice", "topic": "memory",
+          "prompt": "What does this code print?",
+          "promptAr": "ماذا يطبع هذا الكود؟",
+          "code": "int a = 5;\nint *p = &a;\n*p = 9;\nprintf(\"%d\", a);",
+          "options": ["5", "9", "An address", "Error"],
+          "answer": 1,
+          "explanation": "*p = 9 writes through the pointer into a, so a becomes 9.",
+          "explanationAr": "‏*p = 9 تكتب عبر المؤشر داخل a، فتصبح قيمته 9."
+        },
+        {
+          "id": "c-3-2", "type": "choice", "topic": "memory",
+          "prompt": "Which function allocates memory dynamically?",
+          "promptAr": "أي دالة تحجز ذاكرة ديناميكياً؟",
+          "options": ["alloc", "malloc", "new", "create"],
+          "answer": 1,
+          "explanation": "malloc(bytes) reserves heap memory and returns a void*. new is C++.",
+          "explanationAr": "‏malloc(bytes) تحجز ذاكرة في الكومة وتُعيد void*. أما new فخاصة بـ ++C."
+        },
+        {
+          "id": "c-3-3", "type": "choice", "topic": "memory",
+          "prompt": "Which function releases dynamically allocated memory?",
+          "promptAr": "أي دالة تُحرّر الذاكرة المحجوزة ديناميكياً؟",
+          "options": ["delete", "remove", "free", "clear"],
+          "answer": 2,
+          "explanation": "free(ptr) returns heap memory; delete is the C++ counterpart.",
+          "explanationAr": "‏free(ptr) تُعيد ذاكرة الكومة، و delete هي المقابل في ++C."
+        },
+        {
+          "id": "c-3-4", "type": "order", "topic": "functions",
+          "prompt": "Arrange the pieces to define a function.",
+          "promptAr": "رتّب القطع لتعريف دالة.",
+          "options": ["int", "add(int a, int b)", "{", "return a + b;", "}"],
+          "explanation": "Return type, signature, then the body with a return statement.",
+          "explanationAr": "نوع الإرجاع ثم توقيع الدالة ثم الجسم الذي يحتوي جملة return."
+        },
+        {
+          "id": "c-3-5", "type": "match", "topic": "memory",
+          "prompt": "Match each item with its job.",
+          "promptAr": "طابِق كل عنصر بوظيفته.",
+          "pairs": [["malloc", "allocate memory"], ["free", "release memory"], ["strlen", "string length"], ["struct", "group of variables"]],
+          "explanation": "malloc/free manage the heap, strlen counts characters, struct groups fields.",
+          "explanationAr": "‏malloc و free لإدارة الكومة، strlen لعدّ الأحرف، struct لتجميع الحقول."
+        },
+        {
+          "id": "c-3-6", "type": "choice", "topic": "memory",
+          "prompt": "What does a NULL pointer mean?",
+          "promptAr": "ماذا يعني مؤشر NULL؟",
+          "options": ["It points to nothing", "It points to zero bytes", "It is a string", "It is an error"],
+          "answer": 0,
+          "explanation": "NULL means the pointer does not reference any valid object; dereferencing it crashes.",
+          "explanationAr": "‏NULL يعني أن المؤشر لا يشير إلى كائن صالح، وفكّ إشارته يؤدي إلى انهيار."
+        },
+        {
+          "id": "c-3-7", "type": "choice", "topic": "memory",
+          "prompt": "What is wrong with this code?",
+          "promptAr": "ما الخطأ في هذا الكود؟",
+          "code": "char *s = malloc(10);\nfree(s);\nprintf(\"%s\", s);",
+          "options": ["It uses memory after free", "Missing semicolon", "Wrong type", "Nothing"],
+          "answer": 0,
+          "explanation": "After free(s), the block no longer belongs to you; printing s is a use-after-free bug.",
+          "explanationAr": "بعد free(s) لم تعد الكتلة ملكك، فطباعة s خطأ استخدام بعد التحرير (use-after-free)."
+        }
+      ]
+    }
+  ]
+}

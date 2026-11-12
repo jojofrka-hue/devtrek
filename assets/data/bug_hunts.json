@@ -1,0 +1,112 @@
+{
+  "tasks": [
+    {
+      "id": "bug-cpp-semicolon",
+      "language": "C++",
+      "title": "The missing semicolon",
+      "titleAr": "الفاصلة المنقوطة الناقصة",
+      "prompt": "Fix the code so it compiles and prints the value of x.",
+      "promptAr": "أصلح الكود ليُترجم ويطبع قيمة x.",
+      "brokenCode": "int x = 5\ncout << x;",
+      "hint": "Look at the end of the first line. Every statement needs one.",
+      "hintAr": "انظر إلى نهاية السطر الأول: كل جملة تحتاج إلى رمز واحد في نهايتها.",
+      "solution": "int x = 5;\ncout << x;",
+      "checks": {
+        "mustMatchAny": ["int\\s+x\\s*=\\s*5\\s*;"],
+        "mustNotMatch": []
+      },
+      "explanation": "The first statement was missing its semicolon, so the compiler could not separate the two statements.",
+      "explanationAr": "كانت الجملة الأولى تنقصها الفاصلة المنقوطة، فلم يستطع المترجم الفصل بين الجملتين."
+    },
+    {
+      "id": "bug-c-assignment",
+      "language": "C",
+      "title": "Assignment inside a condition",
+      "titleAr": "إسناد داخل شرط",
+      "prompt": "This if should compare x with 10, not assign 10 to x.",
+      "promptAr": "يجب أن يقارن هذا الشرط x بالعدد 10 لا أن يُسنِد 10 إلى x.",
+      "brokenCode": "int x = 5;\nif (x = 10) printf(\"Ten\");",
+      "hint": "A comparison needs two characters, not one.",
+      "hintAr": "المقارنة تحتاج إلى رمزين لا رمز واحد.",
+      "solution": "int x = 5;\nif (x == 10) printf(\"Ten\");",
+      "checks": {
+        "mustMatchAny": ["x\\s*==\\s*10"],
+        "mustNotMatch": ["x\\s*=\\s*10"]
+      },
+      "explanation": "x = 10 assigns a value and is always true (10 is non-zero). x == 10 is the real comparison.",
+      "explanationAr": "‏x = 10 إسناد وقيمته صحيحة دائماً لأن 10 غير صفرية، أما x == 10 فهي المقارنة الصحيحة."
+    },
+    {
+      "id": "bug-python-colon",
+      "language": "Python",
+      "title": "Missing colon",
+      "titleAr": "النقطتان الناقصتان",
+      "prompt": "Fix the if statement so the block is valid Python.",
+      "promptAr": "أصلح جملة if لتكون الكتلة صحيحة في بايثون.",
+      "brokenCode": "if x == 5\n    print(\"five\")",
+      "hint": "Every block opener in Python ends with a specific character.",
+      "hintAr": "كل فاتح كتلة في بايثون ينتهي برمز محدد.",
+      "solution": "if x == 5:\n    print(\"five\")",
+      "checks": {
+        "mustMatchAny": ["if\\s+x\\s*==\\s*5\\s*:"],
+        "mustNotMatch": []
+      },
+      "explanation": "Python blocks start with a colon; without it the parser reports a syntax error.",
+      "explanationAr": "تبدأ كتل بايثون بنقطتين، وبدونهما يبلغ المحلل عن خطأ صياغة."
+    },
+    {
+      "id": "bug-java-type",
+      "language": "Java",
+      "title": "A number is not a String",
+      "titleAr": "العدد ليس نصاً",
+      "prompt": "Make the program valid: either keep x as an int, or store the text in a String.",
+      "promptAr": "اجعل البرنامج صحيحاً: إما أن يبقى x من نوع int، أو أن يُخزَّن النص في String.",
+      "brokenCode": "int x = \"5\";",
+      "hint": "The type on the left must accept the literal on the right.",
+      "hintAr": "يجب أن يقبل النوع في اليسار القيمة الحرفية في اليمين.",
+      "solution": "int x = 5;",
+      "checks": {
+        "mustMatchAny": ["int\\s+x\\s*=\\s*5\\s*;", "String\\s+x\\s*=\\s*\"5\"\\s*;"],
+        "mustNotMatch": ["int\\s+x\\s*=\\s*\"5\"\\s*;"]
+      },
+      "explanation": "A String literal cannot be assigned to an int. Remove the quotes, or change the type to String.",
+      "explanationAr": "لا يمكن إسناد نص إلى int. إما إزالة علامات التنصيص أو تغيير النوع إلى String."
+    },
+    {
+      "id": "bug-js-const",
+      "language": "JavaScript",
+      "title": "Reassigning a constant",
+      "titleAr": "إعادة إسناد ثابت",
+      "prompt": "Fix the code so x can be reassigned to 2.",
+      "promptAr": "أصلح الكود ليصبح بالإمكان إعادة إسناد x إلى 2.",
+      "brokenCode": "const x = 1;\nx = 2;",
+      "hint": "Only one declaration keyword allows reassignment.",
+      "hintAr": "كلمة إعلان واحدة فقط تسمح بإعادة الإسناد.",
+      "solution": "let x = 1;\nx = 2;",
+      "checks": {
+        "mustMatchAny": ["let\\s+x\\s*=\\s*1\\s*;", "var\\s+x\\s*=\\s*1\\s*;"],
+        "mustNotMatch": ["const\\s+x\\s*=\\s*1\\s*;"]
+      },
+      "explanation": "const bindings are read-only. let (or var) creates a mutable binding.",
+      "explanationAr": "ارتباطات const للقراءة فقط، بينما let أو var تُنشئ ارتباطاً قابلاً للتغيير."
+    },
+    {
+      "id": "bug-cpp-bounds",
+      "language": "C++",
+      "title": "Out of bounds",
+      "titleAr": "خارج الحدود",
+      "prompt": "The array has three elements. Fix the code so nothing is read out of range.",
+      "promptAr": "المصفوفة تحتوي ثلاثة عناصر. أصلح الكود ألا يُقرأ أي عنصر خارج النطاق.",
+      "brokenCode": "int arr[3] = {1, 2, 3};\ncout << arr[3];",
+      "hint": "Valid indexes are 0, 1 and 2. Either print the last valid index or enlarge the array.",
+      "hintAr": "الفهارس الصحيحة 0 و1 و2. إما أن تطبع الفهرس الصحيح الأخير أو تُكبّر المصفوفة.",
+      "solution": "int arr[3] = {1, 2, 3};\ncout << arr[2];",
+      "checks": {
+        "mustMatchAny": ["cout\\s*<<\\s*arr\\s*\\[\\s*[012]\\s*\\]", "arr\\s*\\[\\s*4\\s*\\]"],
+        "mustNotMatch": ["cout\\s*<<\\s*arr\\s*\\[\\s*3\\s*\\]"]
+      },
+      "explanation": "Indexes of a three-element array stop at 2. Reading arr[3] is undefined behaviour in C++.",
+      "explanationAr": "فهارس مصفوفة من ثلاثة عناصر تنتهي عند 2، وقراءة arr[3] سلوك غير معرّف في ++C."
+    }
+  ]
+}
