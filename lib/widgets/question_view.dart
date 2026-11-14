@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/question.dart';
 import '../theme/app_theme.dart';
+import '../views/desktop_theme.dart';
 import 'common.dart';
 
 /// Renders one activity (choice / order / match) and owns the answer state.
@@ -62,7 +63,11 @@ class QuestionViewState extends State<QuestionView> {
     if (question.type == QType.order) {
       final n = question.options.length;
       _bank = List<int>.generate(n, (i) => i)..shuffle();
-      for (var attempt = 0; attempt < 5 && n > 1 && _isIdentity(_bank); attempt++) {
+      for (
+        var attempt = 0;
+        attempt < 5 && n > 1 && _isIdentity(_bank);
+        attempt++
+      ) {
         _bank.shuffle();
       }
     } else {
@@ -72,7 +77,11 @@ class QuestionViewState extends State<QuestionView> {
     if (question.type == QType.match) {
       final n = question.pairs.length;
       _rightOrder = List<int>.generate(n, (i) => i)..shuffle();
-      for (var attempt = 0; attempt < 5 && n > 1 && _isIdentity(_rightOrder); attempt++) {
+      for (
+        var attempt = 0;
+        attempt < 5 && n > 1 && _isIdentity(_rightOrder);
+        attempt++
+      ) {
         _rightOrder.shuffle();
       }
     } else {
@@ -159,10 +168,7 @@ class QuestionViewState extends State<QuestionView> {
           q.promptFor(widget.arabic),
           style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
         ),
-        if (q.code != null) ...[
-          const SizedBox(height: 18),
-          codeBox(q.code!),
-        ],
+        if (q.code != null) ...[const SizedBox(height: 18), codeBox(q.code!)],
         const SizedBox(height: 20),
         if (q.type == QType.choice)
           for (var i = 0; i < q.options.length; i++) _optionTile(i)
@@ -175,21 +181,22 @@ class QuestionViewState extends State<QuestionView> {
   }
 
   Widget _optionTile(int index) {
+    final palette = desktopPalette(context);
     final isSelected = _selected == index;
-    var border = Colors.grey.shade300;
-    var fill = Colors.white;
+    var border = palette.cardBorder;
+    var fill = palette.card;
 
     if (isSelected) {
-      border = const Color(0xFF84D8FF);
-      fill = const Color(0xFFDDF4FF);
+      border = blue;
+      fill = Color.alphaBlend(blue.withValues(alpha: 0.15), palette.card);
     }
     if (_checked) {
       if (index == question.answer) {
         border = green;
-        fill = const Color(0xFFD7FFB8);
+        fill = Color.alphaBlend(green.withValues(alpha: 0.15), palette.card);
       } else if (isSelected) {
         border = red;
-        fill = const Color(0xFFFFDFE0);
+        fill = Color.alphaBlend(red.withValues(alpha: 0.15), palette.card);
       }
     }
 
@@ -225,15 +232,16 @@ class QuestionViewState extends State<QuestionView> {
   }
 
   Widget _chip(String text, {VoidCallback? onTap}) {
+    final palette = desktopPalette(context);
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: palette.card,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade400, width: 2),
+          border: Border.all(color: palette.cardBorder, width: 2),
         ),
         child: Text(
           text,
@@ -248,13 +256,15 @@ class QuestionViewState extends State<QuestionView> {
   }
 
   Widget _buildOrder() {
-    var areaFill = Colors.grey.shade100;
-    var areaBorder = Colors.grey.shade300;
+    final palette = desktopPalette(context);
+    var areaFill = palette.track;
+    var areaBorder = palette.cardBorder;
     if (_checked) {
-      areaFill = _wasCorrect
-          ? const Color(0xFFD7FFB8)
-          : const Color(0xFFFFDFE0);
       areaBorder = _wasCorrect ? green : red;
+      areaFill = Color.alphaBlend(
+        areaBorder.withValues(alpha: 0.15),
+        palette.card,
+      );
     }
 
     return Column(
@@ -264,7 +274,7 @@ class QuestionViewState extends State<QuestionView> {
           widget.arabic
               ? 'اضغط القطع بالترتيب الصحيح.'
               : 'Tap the pieces in the correct order.',
-          style: TextStyle(color: Colors.grey.shade600),
+          style: TextStyle(color: desktopPalette(context).subtle),
         ),
         const SizedBox(height: 12),
         Container(
@@ -317,7 +327,7 @@ class QuestionViewState extends State<QuestionView> {
           widget.arabic
               ? 'اضغط عنصراً في اليسار ثم شريكه في اليمين.'
               : 'Tap an item on the left, then its partner on the right.',
-          style: TextStyle(color: Colors.grey.shade600),
+          style: TextStyle(color: desktopPalette(context).subtle),
         ),
         const SizedBox(height: 12),
         Row(
@@ -334,9 +344,7 @@ class QuestionViewState extends State<QuestionView> {
             const SizedBox(width: 12),
             Expanded(
               child: Column(
-                children: [
-                  for (final j in _rightOrder) _matchRightTile(j),
-                ],
+                children: [for (final j in _rightOrder) _matchRightTile(j)],
               ),
             ),
           ],
@@ -384,21 +392,22 @@ class QuestionViewState extends State<QuestionView> {
   }
 
   Widget _matchLeftTile(int index) {
-    var border = Colors.grey.shade300;
-    var fill = Colors.white;
+    final palette = desktopPalette(context);
+    var border = palette.cardBorder;
+    var fill = palette.card;
 
     if (_matchLeft == index) {
       border = blue;
-      fill = const Color(0xFFDDF4FF);
+      fill = Color.alphaBlend(blue.withValues(alpha: 0.15), palette.card);
     } else if (_assign.containsKey(index)) {
       final color = pairColors[index % pairColors.length];
       border = color;
-      fill = color.withValues(alpha: 0.16);
+      fill = Color.alphaBlend(color.withValues(alpha: 0.15), palette.card);
     }
     if (_checked && _assign.containsKey(index)) {
       final ok = _assign[index] == index;
       border = ok ? green : red;
-      fill = ok ? const Color(0xFFD7FFB8) : const Color(0xFFFFDFE0);
+      fill = Color.alphaBlend(border.withValues(alpha: 0.15), palette.card);
     }
 
     return _matchTile(
@@ -416,18 +425,19 @@ class QuestionViewState extends State<QuestionView> {
       if (entry.value == index) owner = entry.key;
     }
 
-    var border = Colors.grey.shade300;
-    var fill = Colors.white;
+    final palette = desktopPalette(context);
+    var border = palette.cardBorder;
+    var fill = palette.card;
 
     if (owner != null) {
       final color = pairColors[owner % pairColors.length];
       border = color;
-      fill = color.withValues(alpha: 0.16);
+      fill = Color.alphaBlend(color.withValues(alpha: 0.15), palette.card);
     }
     if (_checked && owner != null) {
       final ok = owner == index;
       border = ok ? green : red;
-      fill = ok ? const Color(0xFFD7FFB8) : const Color(0xFFFFDFE0);
+      fill = Color.alphaBlend(border.withValues(alpha: 0.15), palette.card);
     }
 
     return _matchTile(

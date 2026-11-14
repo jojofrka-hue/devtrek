@@ -92,8 +92,10 @@ const List<MachineLesson> machineLessons = [
     id: 'von_neumann',
     titleEn: 'Von Neumann architecture',
     titleAr: 'معمارية فون نيومان',
-    summaryEn: 'The stored-program idea: one memory holds both data and instructions.',
-    summaryAr: 'فكرة البرنامج المخزن: ذاكرة واحدة تحمل البيانات والتعليمات معاً.',
+    summaryEn:
+        'The stored-program idea: one memory holds both data and instructions.',
+    summaryAr:
+        'فكرة البرنامج المخزن: ذاكرة واحدة تحمل البيانات والتعليمات معاً.',
     icon: Icons.account_tree_rounded,
     sections: [
       MachineSection(
@@ -141,7 +143,8 @@ const List<MachineLesson> machineLessons = [
       MachineTerm(
         termEn: 'Stored program',
         termAr: 'البرنامج المخزن',
-        defEn: 'Instructions kept in memory as data, loaded and changed freely.',
+        defEn:
+            'Instructions kept in memory as data, loaded and changed freely.',
         defAr: 'تعليمات محفوظة في الذاكرة كبيانات، تُحمّل وتُغيّر بحرية.',
       ),
       MachineTerm(
@@ -178,8 +181,7 @@ const List<MachineLesson> machineLessons = [
           'داخل مزود الطاقة',
         ],
         correctIndex: 0,
-        explanationEn:
-            'The stored-program idea puts code and data in one addressable memory.',
+        explanationEn: 'The stored-program idea puts code and data in one addressable memory.',
         explanationAr:
             'فكرة البرنامج المخزن تضع الكود والبيانات في ذاكرة واحدة معنونة.',
       ),
@@ -199,8 +201,7 @@ const List<MachineLesson> machineLessons = [
         correctIndex: 0,
         explanationEn:
             'One shared path means instruction fetch and data access compete.',
-        explanationAr:
-            'المسار المشترك الواحد يجعل جلب التعليمات والوصول للبيانات يتنافسان.',
+        explanationAr: 'المسار المشترك الواحد يجعل جلب التعليمات والوصول للبيانات يتنافسان.',
       ),
     ],
   ),
@@ -208,7 +209,8 @@ const List<MachineLesson> machineLessons = [
     id: 'cpu_inside',
     titleEn: 'Inside the CPU',
     titleAr: 'داخل المعالج',
-    summaryEn: 'ALU, control unit and registers: the three teams inside every core.',
+    summaryEn:
+        'ALU, control unit and registers: the three teams inside every core.',
     summaryAr: 'وحدة الحساب والمنطق ووحدة التحكم والمسجلات: الفرق الثلاث داخل كل نواة.',
     icon: Icons.memory_rounded,
     sections: [
@@ -311,9 +313,9 @@ const List<MachineLesson> machineLessons = [
     id: 'instruction_cycle',
     titleEn: 'Fetch–decode–execute',
     titleAr: 'جلب–فك–تنفيذ',
-    summaryEn:
-        'The heartbeat of the CPU: every program is this loop, billions of times per second.',
-    summaryAr: 'نبض المعالج: كل برنامج هو هذه الحلقة، مليارات المرات في الثانية.',
+    summaryEn: 'The heartbeat of the CPU: every program is this loop, billions of times per second.',
+    summaryAr:
+        'نبض المعالج: كل برنامج هو هذه الحلقة، مليارات المرات في الثانية.',
     icon: Icons.loop_rounded,
     sections: [
       MachineSection(
@@ -341,7 +343,8 @@ const List<MachineLesson> machineLessons = [
             'ثلاث تعليمات، ثلاث دورات مبسطة. لاحظ أن العنوان 100 يُقرأ ويُكتب '
             'كبيانات، بينما التعليمات نفسها تأتي من الذاكرة أيضاً: فضاء عنونة '
             'واحد للاثنين.',
-        code: 'LOAD R1, [100]   ; R1 <- memory[100]\n'
+        code:
+            'LOAD R1, [100]   ; R1 <- memory[100]\n'
             'ADD  R1, 1       ; R1 <- R1 + 1\n'
             'STORE [100], R1  ; memory[100] <- R1',
       ),
@@ -411,11 +414,7 @@ const List<MachineLesson> machineLessons = [
           'Reset to zero',
           'Stopped',
         ],
-        optionsAr: [
-          'مشيراً إلى التعليمة التالية',
-          'مصفّراً',
-          'متوقفاً',
-        ],
+        optionsAr: ['مشيراً إلى التعليمة التالية', 'مصفّراً', 'متوقفاً'],
         correctIndex: 0,
         explanationEn: 'Advancing PC keeps the loop moving forward.',
         explanationAr: 'تقديم PC يبقي الحلقة تتحرك للأمام.',
@@ -426,7 +425,8 @@ const List<MachineLesson> machineLessons = [
     id: 'memory_hierarchy',
     titleEn: 'The memory hierarchy',
     titleAr: 'هرمية الذاكرة',
-    summaryEn: 'Registers, cache, RAM, storage: faster means smaller and dearer.',
+    summaryEn:
+        'Registers, cache, RAM, storage: faster means smaller and dearer.',
     summaryAr: 'مسجلات ومخبأ وRAM وتخزين: الأسرع أصغر وأغلى.',
     icon: Icons.layers_rounded,
     sections: [
@@ -469,7 +469,8 @@ const List<MachineLesson> machineLessons = [
             'الوصول المتسلسل يركب أسطر المخبأ؛ والقفز بخطوة ثابتة يخطئ أكثر. '
             'عدد العمليات نفسه لكن السرعة الفعلية مختلفة — لهذا يهم ترتيب '
             'الحلقات في C وPython معاً.',
-        code: 'int a[1000000];\n'
+        code:
+            'int a[1000000];\n'
             'for (int i = 0; i < 1000000; i++) a[i] = i;       // sequential\n'
             'for (int i = 0; i < 1000000; i += 64) a[i] *= 2;  // strided',
       ),
@@ -564,7 +565,8 @@ const List<MachineLesson> machineLessons = [
             'ASCII يعيّن \'A\' إلى 65؛ ويونيكود يعيّن الحروف العربية إلى أرقام '
             'أكبر؛ وUTF-8 يرمزها في 1 إلى 4 بايتات. ملف شيفرتك مجرد بايتات '
             'حتى يقرأه مترجم أو مفسر.',
-        code: 'printf("%d\\n", \'A\');    // 65\n'
+        code:
+            'printf("%d\\n", \'A\');    // 65\n'
             'printf("%d\\n", 0b1101);  // 13',
       ),
     ],

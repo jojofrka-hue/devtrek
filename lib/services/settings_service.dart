@@ -30,9 +30,6 @@ class SettingsService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleLanguage() =>
-      setLanguage(language == 'ar' ? 'en' : 'ar');
-
   Future<void> setSound(bool enabled) async {
     sound = enabled;
     await _store.setBool('settings.sound', enabled);

@@ -49,7 +49,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('wide window shows the side rail and a 3-column tool grid', (
+  testWidgets('wide window shows the side rail and two-column grids', (
     tester,
   ) async {
     await pumpShell(tester);
@@ -57,23 +57,30 @@ void main() {
     expect(find.text('Home'), findsOneWidget);
     expect(find.text('Learning'), findsOneWidget);
     expect(find.text('Playground'), findsOneWidget);
-    expect(find.text('Structure Machine'), findsOneWidget);
-    expect(find.text('C'), findsNWidgets(2));
+    expect(find.text('Settings'), findsOneWidget);
+    expect(find.text('Machine Structure'), findsNothing);
+    expect(find.text('Python'), findsNothing);
+    expect(find.text('C++'), findsNothing);
+    expect(find.text('Java'), findsNothing);
+    expect(find.text('JavaScript'), findsNothing);
+    expect(find.text('Main Courses'), findsNothing);
+    expect(find.text('Your modules'), findsNothing);
+    expect(find.text('DAILY GOAL'), findsOneWidget);
+    expect(find.text('RECENT ACTIVITY'), findsOneWidget);
     expect(find.text('Code Playground'), findsOneWidget);
-    expect(find.text('Machine Structure'), findsOneWidget);
-    expect(find.text('Review mistakes'), findsOneWidget);
     expect(find.text('Fix the code'), findsOneWidget);
-    expect(find.text('Algorithm visualizer'), findsOneWidget);
-    expect(find.text('Achievements'), findsOneWidget);
+    expect(find.text('Review mistakes'), findsNothing);
+    expect(find.text('Algorithm visualizer'), findsNothing);
+    expect(find.text('Achievements'), findsNothing);
 
     final grids = tester
         .widgetList<GridView>(find.byType(GridView))
         .map((grid) => grid.gridDelegate)
         .cast<SliverGridDelegateWithFixedCrossAxisCount>()
         .toList();
-    expect(grids, hasLength(2));
+    expect(grids, hasLength(1));
     for (final delegate in grids) {
-      expect(delegate.crossAxisCount, 3);
+      expect(delegate.crossAxisCount, 2);
     }
   });
 
@@ -84,7 +91,7 @@ void main() {
         .map((grid) => grid.gridDelegate)
         .cast<SliverGridDelegateWithFixedCrossAxisCount>()
         .toList();
-    expect(grids, hasLength(2));
+    expect(grids, hasLength(1));
     for (final delegate in grids) {
       expect(delegate.crossAxisCount, 2);
     }
@@ -124,32 +131,56 @@ void main() {
     expect(find.text('Overall accuracy'), findsOneWidget);
   });
 
-  testWidgets('dark mode is the default and can be toggled to light', (
-    tester,
-  ) async {
+  testWidgets('shell is dark-only with no theme toggle', (tester) async {
     await pumpShell(tester);
     final shellContext = tester.element(find.byType(Scaffold).first);
+    expect(Theme.of(shellContext).brightness, Brightness.dark);
     expect(
       Theme.of(shellContext).scaffoldBackgroundColor,
       const Color(0xFF12141D),
     );
+    expect(find.byIcon(Icons.light_mode_outlined), findsNothing);
+    expect(find.byIcon(Icons.dark_mode_outlined), findsNothing);
+    expect(find.byIcon(Icons.brightness_6_outlined), findsNothing);
 
-    await tester.tap(find.byIcon(Icons.light_mode_outlined));
-    await tester.pumpAndSettle();
+    await pumpShell(tester, size: const Size(600, 1000));
     expect(
-      Theme.of(shellContext).scaffoldBackgroundColor,
-      const Color(0xFFFAFBFD),
+      Theme.of(tester.element(find.byType(Scaffold).first)).brightness,
+      Brightness.dark,
     );
-    expect(find.byIcon(Icons.dark_mode_outlined), findsOneWidget);
+    expect(find.byIcon(Icons.brightness_6_outlined), findsNothing);
   });
 
-  testWidgets('narrow window falls back to the classic home page', (
+  testWidgets('shell has no language switcher in header or sidebar', (
     tester,
   ) async {
+    for (final size in const [Size(1400, 1000), Size(600, 1000)]) {
+      await pumpShell(tester, size: size);
+      for (final icon in const [
+        Icons.translate,
+        Icons.translate_rounded,
+        Icons.language,
+        Icons.language_rounded,
+        Icons.g_translate,
+      ]) {
+        expect(find.byIcon(icon), findsNothing);
+      }
+      for (final label in const ['AR', 'EN', 'FR', 'العربية', 'Français']) {
+        expect(find.text(label), findsNothing);
+      }
+    }
+  });
+
+  testWidgets('narrow window uses the compact DevTrek shell', (tester) async {
     await pumpShell(tester, size: const Size(600, 1000));
     expect(find.byType(NavigationRail), findsNothing);
-    expect(find.text('Coding Quest'), findsOneWidget);
-    expect(find.text('Code Playground'), findsOneWidget);
+    expect(find.byType(NavigationBar), findsOneWidget);
+    expect(find.text('Coding Quest'), findsNothing);
+    expect(find.text('Playground'), findsOneWidget);
+
+    await tester.tap(find.text('Playground'));
+    await tester.pumpAndSettle();
+    expect(find.text('RUN'), findsOneWidget);
   });
 
   testWidgets('arabic locale translates the rail labels', (tester) async {

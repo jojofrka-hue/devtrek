@@ -6,6 +6,7 @@ import '../models/achievement.dart';
 import '../models/question.dart';
 import '../models/review_card.dart';
 import '../theme/app_theme.dart';
+import '../views/desktop_theme.dart';
 import '../widgets/common.dart';
 import '../widgets/question_view.dart';
 
@@ -49,7 +50,9 @@ class _ReviewPageState extends State<ReviewPage> {
     final services = context.services;
     _queue = services.review
         .due()
-        .where((card) => services.repository.questionById(card.questionId) != null)
+        .where(
+          (card) => services.repository.questionById(card.questionId) != null,
+        )
         .toList();
     _startedWithCards = _queue.isNotEmpty;
     _finished = _queue.isEmpty;
@@ -133,9 +136,10 @@ class _ReviewPageState extends State<ReviewPage> {
 
   @override
   Widget build(BuildContext context) {
+    final palette = desktopPalette(context);
     final s = context.s;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: palette.sidebar,
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -148,6 +152,7 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   Widget _buildReview(AppStrings s) {
+    final palette = desktopPalette(context);
     final question = _question;
     if (question == null) {
       return Center(child: Text(s.t('reviewEmpty')));
@@ -160,7 +165,7 @@ class _ReviewPageState extends State<ReviewPage> {
           child: Row(
             children: [
               IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.grey.shade600),
+                icon: Icon(Icons.arrow_back, color: palette.subtle),
                 onPressed: () => Navigator.pop(context),
               ),
               Expanded(
@@ -175,7 +180,7 @@ class _ReviewPageState extends State<ReviewPage> {
               Text(
                 '${_index + 1} / ${_queue.length}',
                 style: TextStyle(
-                  color: Colors.grey.shade600,
+                  color: palette.subtle,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -189,7 +194,7 @@ class _ReviewPageState extends State<ReviewPage> {
             child: LinearProgressIndicator(
               value: _queue.isEmpty ? 0 : _index / _queue.length,
               minHeight: 8,
-              backgroundColor: Colors.grey.shade200,
+              backgroundColor: palette.track,
               color: purple,
             ),
           ),
@@ -229,17 +234,19 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   Widget _bottomBar(AppStrings s, Question question) {
+    final palette = desktopPalette(context);
     final background = !_checked
-        ? Colors.white
-        : _wasCorrect
-        ? const Color(0xFFD7FFB8)
-        : const Color(0xFFFFDFE0);
+        ? palette.card
+        : Color.alphaBlend(
+            (_wasCorrect ? green : red).withValues(alpha: 0.15),
+            palette.card,
+          );
 
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
         color: background,
-        border: Border(top: BorderSide(color: Colors.grey.shade300)),
+        border: Border(top: BorderSide(color: palette.cardBorder)),
       ),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxHeight: 320),
@@ -251,11 +258,13 @@ class _ReviewPageState extends State<ReviewPage> {
             children: [
               if (_checked) ...[
                 Text(
-                  _wasCorrect ? s.t('correctExclaim') : s.t('correctAnswerLabel'),
+                  _wasCorrect
+                      ? s.t('correctExclaim')
+                      : s.t('correctAnswerLabel'),
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: _wasCorrect ? darkGreen : red,
+                    color: _wasCorrect ? green : red,
                   ),
                 ),
                 if (!_wasCorrect)
@@ -274,9 +283,9 @@ class _ReviewPageState extends State<ReviewPage> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: palette.card,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade300),
+                      border: Border.all(color: palette.cardBorder),
                     ),
                     child: Text(
                       question.explanationFor(s.isArabic),
@@ -302,6 +311,7 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   Widget _buildDone(AppStrings s) {
+    final palette = desktopPalette(context);
     final services = context.services;
     final nextDue = services.review.nextDueDate;
     return SingleChildScrollView(
@@ -333,7 +343,7 @@ class _ReviewPageState extends State<ReviewPage> {
               '${s.t('reviewNextDue')}: '
               '${nextDue.year}-${nextDue.month.toString().padLeft(2, '0')}-'
               '${nextDue.day.toString().padLeft(2, '0')}',
-              style: TextStyle(color: Colors.grey.shade600),
+              style: TextStyle(color: palette.subtle),
             ),
           ],
           if (_badges.isNotEmpty) ...[
@@ -350,7 +360,10 @@ class _ReviewPageState extends State<ReviewPage> {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFF3CD),
+                      color: Color.alphaBlend(
+                        amber.withValues(alpha: 0.15),
+                        palette.card,
+                      ),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -365,10 +378,7 @@ class _ReviewPageState extends State<ReviewPage> {
             ),
           ],
           const SizedBox(height: 22),
-          BigButton(
-            label: s.t('reviewAgain'),
-            onPressed: _restart,
-          ),
+          BigButton(label: s.t('reviewAgain'), onPressed: _restart),
           const SizedBox(height: 10),
           SizedBox(
             width: double.infinity,

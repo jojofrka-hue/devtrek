@@ -4,6 +4,7 @@ import '../app_scope.dart';
 import '../i18n/app_strings.dart';
 import '../models/bug_task.dart';
 import '../theme/app_theme.dart';
+import '../views/desktop_theme.dart';
 import '../widgets/common.dart';
 import '../widgets/confetti.dart';
 
@@ -12,11 +13,12 @@ class BugHuntPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = desktopPalette(context);
     final services = context.services;
     final s = context.s;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: palette.sidebar,
       body: SafeArea(
         child: ListenableBuilder(
           listenable: services.bugHunt,
@@ -43,8 +45,7 @@ class BugHuntPage extends StatelessWidget {
                     ),
                     StatPill(
                       icon: Icons.bug_report,
-                      text:
-                          '${services.bugHunt.solvedCount}/${tasks.length}',
+                      text: '${services.bugHunt.solvedCount}/${tasks.length}',
                       color: red,
                     ),
                   ],
@@ -52,7 +53,7 @@ class BugHuntPage extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   s.t('bugHuntSubtitle'),
-                  style: TextStyle(color: Colors.grey.shade600, height: 1.4),
+                  style: TextStyle(color: palette.subtle, height: 1.4),
                 ),
                 const SizedBox(height: 18),
                 for (final task in tasks) _taskCard(context, s, task),
@@ -65,6 +66,7 @@ class BugHuntPage extends StatelessWidget {
   }
 
   Widget _taskCard(BuildContext context, AppStrings s, BugTask task) {
+    final palette = desktopPalette(context);
     final solved = context.services.bugHunt.isSolved(task.id);
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -78,11 +80,10 @@ class BugHuntPage extends StatelessWidget {
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: solved ? green : Colors.grey.shade300,
-              width: 2,
-            ),
-            color: solved ? const Color(0xFFF2FFE5) : Colors.white,
+            border: Border.all(color: palette.cardBorder, width: 2),
+            color: solved
+                ? Color.alphaBlend(green.withValues(alpha: 0.15), palette.card)
+                : palette.card,
           ),
           child: Row(
             children: [
@@ -90,7 +91,12 @@ class BugHuntPage extends StatelessWidget {
                 width: 46,
                 height: 46,
                 decoration: BoxDecoration(
-                  color: solved ? green : red.withValues(alpha: 0.12),
+                  color: solved
+                      ? green
+                      : Color.alphaBlend(
+                          red.withValues(alpha: 0.15),
+                          palette.card,
+                        ),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -117,7 +123,7 @@ class BugHuntPage extends StatelessWidget {
                         fontSize: 11.5,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0.8,
-                        color: Colors.grey.shade600,
+                        color: palette.subtle,
                       ),
                     ),
                   ],
@@ -127,12 +133,12 @@ class BugHuntPage extends StatelessWidget {
                 Text(
                   s.t('solved'),
                   style: const TextStyle(
-                    color: darkGreen,
+                    color: green,
                     fontWeight: FontWeight.bold,
                     fontSize: 12.5,
                   ),
                 ),
-              Icon(Icons.chevron_right, color: Colors.grey.shade400),
+              Icon(Icons.chevron_right, color: palette.subtle),
             ],
           ),
         ),
@@ -237,10 +243,11 @@ class _BugHuntDetailPageState extends State<BugHuntDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final palette = desktopPalette(context);
     final s = context.s;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: palette.sidebar,
       body: SafeArea(
         child: Stack(
           children: [
@@ -269,7 +276,7 @@ class _BugHuntDetailPageState extends State<BugHuntDetailPage> {
                           fontSize: 11.5,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 0.8,
-                          color: Colors.grey.shade600,
+                          color: palette.subtle,
                         ),
                       ),
                     ],
@@ -292,7 +299,7 @@ class _BugHuntDetailPageState extends State<BugHuntDetailPage> {
                         const SizedBox(height: 14),
                         Text(
                           s.t('tapToEdit'),
-                          style: TextStyle(color: Colors.grey.shade600),
+                          style: TextStyle(color: palette.subtle),
                         ),
                         const SizedBox(height: 10),
                         Text(
@@ -301,7 +308,7 @@ class _BugHuntDetailPageState extends State<BugHuntDetailPage> {
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1,
-                            color: Colors.grey.shade600,
+                            color: palette.subtle,
                           ),
                         ),
                         const SizedBox(height: 6),
@@ -348,9 +355,15 @@ class _BugHuntDetailPageState extends State<BugHuntDetailPage> {
                             width: double.infinity,
                             padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFFDFE0),
+                              color: Color.alphaBlend(
+                                red.withValues(alpha: 0.15),
+                                palette.card,
+                              ),
                               borderRadius: BorderRadius.circular(14),
-                              border: Border.all(color: red, width: 2),
+                              border: Border.all(
+                                color: palette.cardBorder,
+                                width: 2,
+                              ),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -380,18 +393,24 @@ class _BugHuntDetailPageState extends State<BugHuntDetailPage> {
                             width: double.infinity,
                             padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFD7FFB8),
+                              color: Color.alphaBlend(
+                                green.withValues(alpha: 0.15),
+                                palette.card,
+                              ),
                               borderRadius: BorderRadius.circular(14),
-                              border: Border.all(color: green, width: 2),
+                              border: Border.all(
+                                color: palette.cardBorder,
+                                width: 2,
+                              ),
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.verified, color: darkGreen),
+                                const Icon(Icons.verified, color: green),
                                 const SizedBox(width: 8),
                                 Text(
                                   s.t('solved'),
                                   style: const TextStyle(
-                                    color: darkGreen,
+                                    color: green,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                   ),
@@ -405,13 +424,19 @@ class _BugHuntDetailPageState extends State<BugHuntDetailPage> {
                             width: double.infinity,
                             padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFFF3CD),
+                              color: Color.alphaBlend(
+                                amber.withValues(alpha: 0.15),
+                                palette.card,
+                              ),
                               borderRadius: BorderRadius.circular(14),
                             ),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('💡', style: TextStyle(fontSize: 18)),
+                                const Text(
+                                  '💡',
+                                  style: TextStyle(fontSize: 18),
+                                ),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
@@ -431,7 +456,7 @@ class _BugHuntDetailPageState extends State<BugHuntDetailPage> {
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1,
-                              color: Colors.grey.shade600,
+                              color: palette.subtle,
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -449,8 +474,8 @@ class _BugHuntDetailPageState extends State<BugHuntDetailPage> {
                 Container(
                   padding: const EdgeInsets.fromLTRB(18, 12, 18, 16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border(top: BorderSide(color: Colors.grey.shade300)),
+                    color: palette.card,
+                    border: Border(top: BorderSide(color: palette.cardBorder)),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -466,8 +491,7 @@ class _BugHuntDetailPageState extends State<BugHuntDetailPage> {
                         children: [
                           Expanded(
                             child: TextButton(
-                              onPressed: () =>
-                                  setState(() => _showHint = true),
+                              onPressed: () => setState(() => _showHint = true),
                               child: Text(
                                 s.t('hintBtn'),
                                 style: const TextStyle(

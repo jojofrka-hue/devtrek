@@ -4,10 +4,10 @@ import 'package:coding_quest/models/course.dart';
 import 'package:coding_quest/models/level.dart';
 import 'package:coding_quest/models/question.dart';
 import 'package:coding_quest/playground/code_runner.dart';
-import 'package:coding_quest/screens/lesson_page.dart';
 import 'package:coding_quest/services/app_services.dart';
 import 'package:coding_quest/views/desktop_shell.dart';
 import 'package:coding_quest/views/devtrek_onboarding.dart';
+import 'package:coding_quest/views/exercise_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -66,9 +66,7 @@ CourseRepository _tracksRepository() => CourseRepository.fromData(
     _course('python', 'Python Foundations', [
       _level('python-1', 'Python Basics', [_q('python-1-1', QType.choice)]),
       _level('python-2', 'Python Loops', [_q('python-2-1', QType.choice)]),
-      _level('python-3', 'Python Functions', [
-        _q('python-3-1', QType.choice),
-      ]),
+      _level('python-3', 'Python Functions', [_q('python-3-1', QType.choice)]),
     ]),
   ],
 );
@@ -164,18 +162,27 @@ void main() {
     expect(find.text('Python'), findsWidgets);
   });
 
-  testWidgets('sidebar switches the track at any time', (tester) async {
+  testWidgets('Settings is the only place that switches tracks', (
+    tester,
+  ) async {
     await completeOnboarding('c');
     await pumpShell(tester);
 
-    expect(find.text('YOUR TRACK'), findsOneWidget);
+    expect(find.text('Python'), findsNothing);
     expect(services.profile.favoriteCourse, 'c');
 
-    await tester.tap(find.text('Python'));
+    await tester.tap(find.text('Settings'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('settings-track')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Python').last);
     await tester.pumpAndSettle();
 
     expect(services.profile.favoriteCourse, 'python');
-    expect(find.text('Python'), findsWidgets);
+    await tester.tap(find.text('Learning'));
+    await tester.pumpAndSettle();
+    expect(find.text('Python Basics'), findsOneWidget);
+    expect(find.text('Basics of C'), findsNothing);
   });
 
   testWidgets('guided path shows locked sequence with Bloom chips', (
@@ -198,7 +205,7 @@ void main() {
     expect(find.text('Application 1'), findsOneWidget);
   });
 
-  testWidgets('levels bank filters by difficulty and opens a challenge', (
+  testWidgets('levels bank filters by difficulty and opens an exercise', (
     tester,
   ) async {
     await completeOnboarding('c');
@@ -209,30 +216,32 @@ void main() {
     await tester.tap(find.text('Levels Bank'));
     await tester.pumpAndSettle();
 
+    // Every question of every level is listed, not the three level cards.
+    expect(find.text('5 exercises'), findsOneWidget);
+    expect(find.text('Pick one'), findsNWidgets(5));
     expect(find.text('Beginner'), findsWidgets);
     expect(find.text('Advanced'), findsWidgets);
-    expect(find.text('Memory Mastery'), findsOneWidget);
 
     await tester.tap(find.text('Advanced').first);
     await tester.pumpAndSettle();
+    expect(find.text('1 exercise'), findsOneWidget);
+    expect(find.text('Pick one'), findsOneWidget);
     expect(find.text('Memory Mastery'), findsOneWidget);
     expect(find.text('Basics of C'), findsNothing);
 
-    await tester.tap(find.text('Memory Mastery'));
+    await tester.tap(find.text('Pick one'));
     await tester.pumpAndSettle();
-    expect(find.byType(LessonPage), findsOneWidget);
+    expect(find.byType(ExerciseView), findsOneWidget);
   });
 
-  testWidgets('machine track lists the architecture lessons', (
-    tester,
-  ) async {
+  testWidgets('machine track lists the architecture lessons', (tester) async {
     await completeOnboarding('machine');
     await pumpShell(tester);
 
     await tester.tap(find.text('Learning'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Structure Machine'), findsWidgets);
+    expect(find.text('Machine Structure'), findsWidgets);
     expect(find.textContaining('Von Neumann'), findsWidgets);
   });
 }

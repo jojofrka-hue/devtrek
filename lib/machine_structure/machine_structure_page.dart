@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../app_scope.dart';
 import '../theme/app_theme.dart';
+import '../views/desktop_theme.dart';
 import '../widgets/common.dart';
 import 'machine_lesson_page.dart';
 import 'machine_lessons.dart';
@@ -19,7 +20,10 @@ class MachineStructurePage extends StatelessWidget {
         children: [
           Text(
             s.t('machineSubtitle'),
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+            style: TextStyle(
+              fontSize: 14,
+              color: desktopPalette(context).subtle,
+            ),
           ),
           const SizedBox(height: 16),
           for (var i = 0; i < machineLessons.length; i++)

@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import '../app_scope.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common.dart';
-import 'onboarding_page.dart';
+import '../views/desktop_theme.dart';
+import '../views/devtrek_track.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  const SettingsPage({super.key, this.showBackButton = true});
+
+  final bool showBackButton;
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -36,10 +39,7 @@ class _SettingsPageState extends State<SettingsPage> {
     if (!mounted) return;
     _serverController.text = services.settings.aiServerUrl;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(context.s.t('savedMsg')),
-        backgroundColor: green,
-      ),
+      SnackBar(content: Text(context.s.t('savedMsg')), backgroundColor: green),
     );
   }
 
@@ -67,10 +67,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
     await context.services.resetAll();
     if (!mounted) return;
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const OnboardingPage()),
-      (route) => false,
-    );
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
   @override
@@ -79,7 +76,6 @@ class _SettingsPageState extends State<SettingsPage> {
     final s = context.s;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: ListenableBuilder(
           listenable: Listenable.merge([services.settings, services.profile]),
@@ -95,11 +91,13 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    const SizedBox(width: 4),
+                    if (widget.showBackButton) ...[
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      const SizedBox(width: 4),
+                    ],
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,7 +113,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             s.t('settingsSubtitle'),
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.grey.shade600,
+                              color: desktopPalette(context).subtle,
                             ),
                           ),
                         ],
@@ -124,22 +122,38 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
                 const SizedBox(height: 14),
-                _sectionTitle(s.t('languageLabel')),
-                ChoiceCard(
-                  title: s.t('english'),
-                  icon: Icons.translate,
-                  color: blue,
-                  selected: settings.language == 'en',
-                  onTap: () => settings.setLanguage('en'),
+                _sectionTitle(s.t('activeTrackSettings')),
+                DropdownButtonFormField<DevTrekTrack>(
+                  key: const ValueKey('settings-track'),
+                  initialValue: currentTrack(services),
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(
+                      currentTrack(services).icon,
+                      color: currentTrack(services).color,
+                    ),
+                    border: const OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                  items: [
+                    for (final track in DevTrekTrack.values)
+                      DropdownMenuItem(
+                        value: track,
+                        child: Text(s.t('track_${track.name}')),
+                      ),
+                  ],
+                  onChanged: (track) {
+                    if (track != null) selectTrack(services, track);
+                  },
                 ),
-                ChoiceCard(
-                  title: s.t('arabic'),
-                  icon: Icons.language,
-                  color: green,
-                  selected: settings.language == 'ar',
-                  onTap: () => settings.setLanguage('ar'),
+                const SizedBox(height: 8),
+                Text(
+                  s.t('activeTrackSettingsHint'),
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    color: desktopPalette(context).subtle,
+                  ),
                 ),
-                const SizedBox(height: 10),
+                const Divider(height: 28),
                 SwitchListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 4),
                   title: Text(
@@ -150,7 +164,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     settings.sound
                         ? Icons.volume_up_rounded
                         : Icons.volume_off_rounded,
-                    color: settings.sound ? green : Colors.grey,
+                    color: settings.sound
+                        ? green
+                        : desktopPalette(context).subtle,
                   ),
                   activeThumbColor: green,
                   value: settings.sound,
@@ -203,7 +219,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: TextStyle(
                     fontSize: 11.5,
                     height: 1.4,
-                    color: Colors.grey.shade600,
+                    color: desktopPalette(context).subtle,
                   ),
                 ),
                 const Divider(height: 28),
@@ -214,17 +230,15 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 _profileRow(
                   s.t('experienceLabel'),
-                  profile.experience.isEmpty
-                      ? '—'
-                      : s.t(profile.experience),
+                  profile.experience.isEmpty ? '—' : s.t(profile.experience),
                 ),
                 _profileRow(
                   s.t('goalLabel'),
                   profile.goal.isEmpty ? '—' : s.t(profile.goal),
                 ),
                 _profileRow(
-                  s.t('startLanguageLabel'),
-                  favorite?.name ?? '—',
+                  s.t('activeTrackSettings'),
+                  favorite?.name ?? s.t('track_${currentTrack(services).name}'),
                 ),
                 _profileRow(
                   s.t('quickTestLabel'),
@@ -245,7 +259,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   s.t('resetWarning'),
                   style: TextStyle(
                     fontSize: 11.5,
-                    color: Colors.grey.shade600,
+                    color: desktopPalette(context).subtle,
                   ),
                 ),
               ],
@@ -264,7 +278,7 @@ class _SettingsPageState extends State<SettingsPage> {
         fontSize: 12,
         fontWeight: FontWeight.bold,
         letterSpacing: 1,
-        color: Colors.grey.shade600,
+        color: desktopPalette(context).subtle,
       ),
     ),
   );
@@ -276,12 +290,18 @@ class _SettingsPageState extends State<SettingsPage> {
         Expanded(
           child: Text(
             label,
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
+            style: TextStyle(
+              fontSize: 14,
+              color: desktopPalette(context).subtle,
+            ),
           ),
         ),
-        Text(
-          value,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        Flexible(
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
         ),
       ],
     ),

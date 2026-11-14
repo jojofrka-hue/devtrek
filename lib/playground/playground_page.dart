@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../app_scope.dart';
 import '../i18n/app_strings.dart';
 import '../theme/app_theme.dart';
+import '../views/desktop_theme.dart';
 import '../widgets/common.dart';
 import 'code_runner.dart';
 import 'playground_samples.dart';
@@ -132,8 +133,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
             ],
             selected: {_language},
             showSelectedIcon: false,
-            onSelectionChanged: (selection) =>
-                _switchLanguage(selection.first),
+            onSelectionChanged: (selection) => _switchLanguage(selection.first),
           ),
           const SizedBox(height: 14),
           Row(
@@ -191,7 +191,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                   hintText: _language == PlayLanguage.c
                       ? '#include <stdio.h>'
                       : 'print("...")',
-                  hintStyle: TextStyle(color: Colors.grey.shade600),
+                  hintStyle: const TextStyle(color: Colors.white38),
                 ),
               ),
             ),
@@ -224,10 +224,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
             const SizedBox(height: 18),
             Text(
               s.t('playgroundOutput'),
-              style: const TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -287,14 +284,17 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
               const SizedBox(height: 10),
               Text(
                 s.t('playgroundNoOutput'),
-                style: TextStyle(color: Colors.grey.shade600),
+                style: TextStyle(color: desktopPalette(context).subtle),
               ),
             ],
             if (outcome.truncated) ...[
               const SizedBox(height: 8),
               Text(
                 s.t('playgroundTruncated'),
-                style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                style: TextStyle(
+                  color: desktopPalette(context).subtle,
+                  fontSize: 12,
+                ),
               ),
             ],
           ],

@@ -83,7 +83,10 @@ class CodeRunner {
   }) async {
     final sw = Stopwatch()..start();
     if (!Platform.isWindows) {
-      return RunOutcome(failure: RunFailure.unsupportedPlatform, elapsed: sw.elapsed);
+      return RunOutcome(
+        failure: RunFailure.unsupportedPlatform,
+        elapsed: sw.elapsed,
+      );
     }
     if (source.trim().isEmpty) {
       return RunOutcome(failure: RunFailure.emptySource, elapsed: sw.elapsed);
@@ -91,7 +94,10 @@ class CodeRunner {
     if (!_detected) await detect();
     final tool = language == PlayLanguage.c ? _c : _python;
     if (tool == null) {
-      return RunOutcome(failure: RunFailure.missingToolchain, elapsed: sw.elapsed);
+      return RunOutcome(
+        failure: RunFailure.missingToolchain,
+        elapsed: sw.elapsed,
+      );
     }
 
     final dir = await Directory.systemTemp.createTemp('cq_play_');
@@ -113,7 +119,9 @@ class CodeRunner {
         sw,
         timeout: compileTimeout,
       );
-      if (compile.failure != null || compile.timedOut || compile.exitCode != 0) {
+      if (compile.failure != null ||
+          compile.timedOut ||
+          compile.exitCode != 0) {
         return RunOutcome(
           failure: compile.timedOut ? null : RunFailure.compileFailed,
           timedOut: compile.timedOut,
@@ -121,7 +129,14 @@ class CodeRunner {
           elapsed: sw.elapsed,
         );
       }
-      return await _execute(exe.path, [], dir, input, sw, compileLog: compile.stderr);
+      return await _execute(
+        exe.path,
+        [],
+        dir,
+        input,
+        sw,
+        compileLog: compile.stderr,
+      );
     } finally {
       try {
         await dir.delete(recursive: true);
@@ -129,7 +144,10 @@ class CodeRunner {
     }
   }
 
-  Future<ToolchainInfo?> _probe(List<String> candidates, List<String> args) async {
+  Future<ToolchainInfo?> _probe(
+    List<String> candidates,
+    List<String> args,
+  ) async {
     for (final exe in candidates) {
       if (exe.contains(Platform.pathSeparator) && !File(exe).existsSync()) {
         continue;
@@ -144,7 +162,10 @@ class CodeRunner {
           Stopwatch()..start(),
           timeout: const Duration(seconds: 8),
         );
-        if (r.failure == null && !r.timedOut && r.exitCode == 0 && r.stdout.trim().isNotEmpty) {
+        if (r.failure == null &&
+            !r.timedOut &&
+            r.exitCode == 0 &&
+            r.stdout.trim().isNotEmpty) {
           return ToolchainInfo(
             executable: exe,
             version: r.stdout.trim().split('\n').first.trim(),

@@ -22,10 +22,11 @@ const Map<PlayLanguage, List<PlaygroundSample>> playgroundSamples = {
       id: 'c_hello',
       titleEn: 'Hello, world!',
       titleAr: 'مرحباً بالعالم!',
-      code: '#include <stdio.h>\n'
+      code:
+          '#include <stdio.h>\n'
           '\n'
           'int main(void) {\n'
-          '    printf("Hello, Coding Quest!\\n");\n'
+          '    printf("Hello, DevTrek!\\n");\n'
           '    return 0;\n'
           '}\n',
     ),
@@ -33,7 +34,8 @@ const Map<PlayLanguage, List<PlaygroundSample>> playgroundSamples = {
       id: 'c_loop',
       titleEn: 'Loop: sum 1..10',
       titleAr: 'حلقة: مجموع 1..10',
-      code: '#include <stdio.h>\n'
+      code:
+          '#include <stdio.h>\n'
           '\n'
           'int main(void) {\n'
           '    int sum = 0;\n'
@@ -48,7 +50,8 @@ const Map<PlayLanguage, List<PlaygroundSample>> playgroundSamples = {
       id: 'c_input',
       titleEn: 'Read input: square a number',
       titleAr: 'قراءة إدخال: مربع عدد',
-      code: '#include <stdio.h>\n'
+      code:
+          '#include <stdio.h>\n'
           '\n'
           'int main(void) {\n'
           '    int n = 0;\n'
@@ -63,7 +66,8 @@ const Map<PlayLanguage, List<PlaygroundSample>> playgroundSamples = {
       id: 'c_fib',
       titleEn: 'Function: Fibonacci',
       titleAr: 'دالة: فيبوناتشي',
-      code: '#include <stdio.h>\n'
+      code:
+          '#include <stdio.h>\n'
           '\n'
           'int fib(int n) {\n'
           '    if (n < 2) return n;\n'
@@ -84,13 +88,14 @@ const Map<PlayLanguage, List<PlaygroundSample>> playgroundSamples = {
       id: 'py_hello',
       titleEn: 'Hello, world!',
       titleAr: 'مرحباً بالعالم!',
-      code: 'print("Hello, Coding Quest!")\n',
+      code: 'print("Hello, DevTrek!")\n',
     ),
     PlaygroundSample(
       id: 'py_loop',
       titleEn: 'Loop: sum 1..10',
       titleAr: 'حلقة: مجموع 1..10',
-      code: 'total = 0\n'
+      code:
+          'total = 0\n'
           'for i in range(1, 11):\n'
           '    total += i\n'
           'print("sum =", total)\n',
@@ -99,14 +104,16 @@ const Map<PlayLanguage, List<PlaygroundSample>> playgroundSamples = {
       id: 'py_input',
       titleEn: 'Read input: square a number',
       titleAr: 'قراءة إدخال: مربع عدد',
-      code: 'n = int(input("Enter a number: "))\n'
+      code:
+          'n = int(input("Enter a number: "))\n'
           'print(f"{n} * {n} = {n * n}")\n',
     ),
     PlaygroundSample(
       id: 'py_fib',
       titleEn: 'Function: Fibonacci',
       titleAr: 'دالة: فيبوناتشي',
-      code: 'def fib(n):\n'
+      code:
+          'def fib(n):\n'
           '    if n < 2:\n'
           '        return n\n'
           '    return fib(n - 1) + fib(n - 2)\n'

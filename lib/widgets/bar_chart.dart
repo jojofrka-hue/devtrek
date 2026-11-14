@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
+import '../views/desktop_theme.dart';
 
 class TopicBar extends StatelessWidget {
   const TopicBar({
@@ -22,6 +23,7 @@ class TopicBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = desktopPalette(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -40,10 +42,7 @@ class TopicBar extends StatelessWidget {
               ),
               Text(
                 trailing,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey.shade600,
-                ),
+                style: TextStyle(fontSize: 12, color: palette.subtle),
               ),
               const SizedBox(width: 8),
               Text(
@@ -62,7 +61,7 @@ class TopicBar extends StatelessWidget {
             child: LinearProgressIndicator(
               value: accuracy.clamp(0.0, 1.0),
               minHeight: 12,
-              backgroundColor: Colors.grey.shade200,
+              backgroundColor: palette.track,
               color: _color,
             ),
           ),
@@ -86,12 +85,13 @@ class MiniStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = desktopPalette(context);
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: color.withValues(alpha: 0.55), width: 2),
-        color: color.withValues(alpha: 0.07),
+        color: Color.alphaBlend(color.withValues(alpha: 0.07), palette.card),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +100,7 @@ class MiniStat extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 12,
-              color: Colors.grey.shade700,
+              color: palette.subtle,
               fontWeight: FontWeight.w600,
             ),
           ),

@@ -1,12 +1,14 @@
 import 'package:coding_quest/app_scope.dart';
+import 'package:coding_quest/playground/code_runner.dart';
 import 'package:coding_quest/screens/achievements_page.dart';
 import 'package:coding_quest/screens/bug_hunt_page.dart';
-import 'package:coding_quest/screens/home_page.dart';
 import 'package:coding_quest/screens/review_page.dart';
 import 'package:coding_quest/screens/settings_page.dart';
 import 'package:coding_quest/screens/sort_visualizer_page.dart';
-import 'package:coding_quest/screens/stats_page.dart';
 import 'package:coding_quest/services/app_services.dart';
+import 'package:coding_quest/views/desktop_shell.dart';
+import 'package:coding_quest/views/desktop_theme.dart';
+import 'package:coding_quest/views/stats_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -28,8 +30,10 @@ Future<void> _pumpScreen(
     AppScope(
       services: services,
       child: MaterialApp(
+        theme: buildDesktopTheme(),
+        themeMode: ThemeMode.dark,
         locale: const Locale('en'),
-        supportedLocales: const [Locale('en'), Locale('ar')],
+        supportedLocales: const [Locale('en'), Locale('fr'), Locale('ar')],
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
@@ -53,27 +57,31 @@ void main() {
     );
   });
 
-  testWidgets('home page renders courses and quick actions', (tester) async {
-    await _pumpScreen(tester, services, const HomePage());
-
-    expect(find.text('Coding Quest'), findsOneWidget);
-    expect(find.text('Choose a language'), findsOneWidget);
-    expect(find.text('Statistics'), findsOneWidget);
-    expect(find.text('Fix the code'), findsOneWidget);
-    expect(find.text('Achievements'), findsOneWidget);
-  });
-
-  testWidgets('stats page renders summary and empty topic state', (
+  testWidgets('desktop shell renders courses and quick actions', (
     tester,
   ) async {
-    await _pumpScreen(tester, services, const StatsPage());
+    await _pumpScreen(
+      tester,
+      services,
+      DesktopShell(
+        playgroundRunner: CodeRunner(pythonCandidates: [], cCandidates: []),
+      ),
+    );
+
+    expect(find.text('Main Courses'), findsNothing);
+    expect(find.text('Your modules'), findsNothing);
+    expect(find.text('DAILY GOAL'), findsOneWidget);
+    expect(find.text('Code Playground'), findsOneWidget);
+    expect(find.text('Fix the code'), findsOneWidget);
+    expect(find.text('Achievements'), findsNothing);
+    expect(find.text('Coding Quest'), findsNothing);
+  });
+
+  testWidgets('stats view renders the accuracy summary', (tester) async {
+    await _pumpScreen(tester, services, const StatsView());
 
     expect(find.text('Statistics'), findsOneWidget);
     expect(find.text('Overall accuracy'), findsOneWidget);
-    expect(
-      find.text('Answer some questions to see your statistics.'),
-      findsOneWidget,
-    );
   });
 
   testWidgets('bug hunt page renders the header without tasks', (tester) async {
@@ -99,16 +107,21 @@ void main() {
     expect(find.text('RUN'), findsOneWidget);
   });
 
-  testWidgets('settings page renders language, sound and AI sections', (
+  testWidgets('settings page renders sound and AI sections without language', (
     tester,
   ) async {
     await _pumpScreen(tester, services, const SettingsPage());
 
     expect(find.text('Settings'), findsOneWidget);
-    expect(find.text('LANGUAGE'), findsOneWidget);
+    expect(find.text('LANGUAGE'), findsNothing);
+    expect(find.text('English'), findsNothing);
     expect(find.text('Sound & haptics'), findsOneWidget);
     expect(find.text('AI SERVER URL'), findsOneWidget);
     expect(find.text('http://localhost:8787'), findsWidgets);
+    expect(
+      Theme.of(tester.element(find.byType(SettingsPage))).brightness,
+      Brightness.dark,
+    );
   });
 
   testWidgets('review page shows the empty state when nothing is due', (

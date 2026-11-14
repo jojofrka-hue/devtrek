@@ -13,16 +13,14 @@ class SectionHeading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
-      child: Row(
+      child: Wrap(
+        spacing: 16,
+        runSpacing: 8,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           ?trailing,
         ],
@@ -51,12 +49,14 @@ class ResponsiveGrid extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
-        final columns = width >= 980
+        final columns = width >= 920
             ? maxColumns
             : width >= 620
             ? (maxColumns < 2 ? maxColumns : 2)
             : 1;
         return GridView.custom(
+          padding: EdgeInsets.zero,
+          primary: false,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

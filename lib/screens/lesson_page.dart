@@ -12,13 +12,10 @@ import '../widgets/confetti.dart';
 import '../widgets/course_visuals.dart';
 import '../widgets/mascot.dart';
 import '../widgets/question_view.dart';
+import '../views/desktop_theme.dart';
 
 class LessonPage extends StatefulWidget {
-  const LessonPage({
-    super.key,
-    required this.course,
-    required this.levelIndex,
-  });
+  const LessonPage({super.key, required this.course, required this.levelIndex});
 
   final Course course;
   final int levelIndex;
@@ -222,7 +219,10 @@ class _LessonPageState extends State<LessonPage> {
               child: Row(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.close, color: Colors.grey.shade600),
+                    icon: Icon(
+                      Icons.close,
+                      color: desktopPalette(context).subtle,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                   const Spacer(),
@@ -244,9 +244,8 @@ class _LessonPageState extends State<LessonPage> {
                         Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: courseColor(widget.course).withValues(
-                              alpha: 0.14,
-                            ),
+                            color: courseColor(widget.course)
+                                .withValues(alpha: 0.14),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
@@ -356,7 +355,7 @@ class _LessonPageState extends State<LessonPage> {
           child: Row(
             children: [
               IconButton(
-                icon: Icon(Icons.close, color: Colors.grey.shade600),
+                icon: Icon(Icons.close, color: desktopPalette(context).subtle),
                 onPressed: () => Navigator.pop(context),
               ),
               Expanded(
@@ -365,7 +364,7 @@ class _LessonPageState extends State<LessonPage> {
                   child: LinearProgressIndicator(
                     value: _index / _questions.length,
                     minHeight: 14,
-                    backgroundColor: Colors.grey.shade300,
+                    backgroundColor: desktopPalette(context).cardBorder,
                     color: green,
                   ),
                 ),
@@ -429,17 +428,21 @@ class _LessonPageState extends State<LessonPage> {
   }
 
   Widget _bottomBar(AppStrings s) {
+    final palette = desktopPalette(context);
     final background = !_checked
-        ? Colors.white
-        : _wasCorrect
-        ? const Color(0xFFD7FFB8)
-        : const Color(0xFFFFDFE0);
+        ? palette.sidebar
+        : Color.alphaBlend(
+            (_wasCorrect ? green : red).withValues(alpha: 0.15),
+            palette.card,
+          );
 
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
         color: background,
-        border: Border(top: BorderSide(color: Colors.grey.shade300)),
+        border: Border(
+          top: BorderSide(color: desktopPalette(context).cardBorder),
+        ),
       ),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxHeight: 340),
@@ -451,7 +454,9 @@ class _LessonPageState extends State<LessonPage> {
             children: [
               if (_checked) ...[
                 Text(
-                  _wasCorrect ? s.t('correctExclaim') : s.t('correctAnswerLabel'),
+                  _wasCorrect
+                      ? s.t('correctExclaim')
+                      : s.t('correctAnswerLabel'),
                   style: TextStyle(
                     fontSize: 19,
                     fontWeight: FontWeight.bold,
@@ -488,9 +493,11 @@ class _LessonPageState extends State<LessonPage> {
                       width: double.infinity,
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: desktopPalette(context).card,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: purple.withValues(alpha: 0.5)),
+                        border: Border.all(
+                          color: purple.withValues(alpha: 0.5),
+                        ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -532,7 +539,9 @@ class _LessonPageState extends State<LessonPage> {
                               )
                             : const Icon(Icons.auto_awesome, size: 18),
                         label: Text(
-                          _aiLoading ? s.t('aiThinking') : s.t('explainMistake'),
+                          _aiLoading
+                              ? s.t('aiThinking')
+                              : s.t('explainMistake'),
                         ),
                       ),
                     ),
@@ -558,9 +567,9 @@ class _LessonPageState extends State<LessonPage> {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: desktopPalette(context).card,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: desktopPalette(context).cardBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -570,7 +579,7 @@ class _LessonPageState extends State<LessonPage> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 13,
-              color: Colors.grey.shade700,
+              color: desktopPalette(context).subtle,
             ),
           ),
           const SizedBox(height: 4),
@@ -585,8 +594,7 @@ class _LessonPageState extends State<LessonPage> {
   Widget _buildResult(AppStrings s) {
     final won = _hearts > 0;
     final hasNext =
-        _stars >= 1 &&
-        widget.levelIndex + 1 < widget.course.levels.length;
+        _stars >= 1 && widget.levelIndex + 1 < widget.course.levels.length;
 
     return Stack(
       children: [
@@ -623,7 +631,7 @@ class _LessonPageState extends State<LessonPage> {
                       padding: const EdgeInsets.only(top: 6),
                       child: Text(
                         s.t('tryAgainHint'),
-                        style: TextStyle(color: Colors.grey.shade600),
+                        style: TextStyle(color: desktopPalette(context).subtle),
                       ),
                     ),
                   const SizedBox(height: 20),
@@ -646,7 +654,7 @@ class _LessonPageState extends State<LessonPage> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 12.5,
-                        color: Colors.grey.shade600,
+                        color: desktopPalette(context).subtle,
                       ),
                     ),
                   ],
@@ -664,11 +672,12 @@ class _LessonPageState extends State<LessonPage> {
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFFF3CD),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: Colors.amber.shade600,
+                              color: Color.alphaBlend(
+                                amber.withValues(alpha: 0.15),
+                                desktopPalette(context).card,
                               ),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.amber.shade600),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -723,10 +732,7 @@ class _LessonPageState extends State<LessonPage> {
                       ),
                     )
                   else
-                    BigButton(
-                      label: s.t('practiceAgain'),
-                      onPressed: _restart,
-                    ),
+                    BigButton(label: s.t('practiceAgain'), onPressed: _restart),
                   const SizedBox(height: 10),
                   SizedBox(
                     width: double.infinity,
@@ -745,9 +751,7 @@ class _LessonPageState extends State<LessonPage> {
           ),
         ),
         if (won && _stars > 0)
-          Positioned.fill(
-            child: ConfettiOverlay(trigger: _confettiTrigger),
-          ),
+          Positioned.fill(child: ConfettiOverlay(trigger: _confettiTrigger)),
       ],
     );
   }
@@ -757,6 +761,7 @@ class _LessonPageState extends State<LessonPage> {
       width: 128,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
+        color: desktopPalette(context).card,
         border: Border.all(color: color, width: 2),
         borderRadius: BorderRadius.circular(16),
       ),

@@ -106,7 +106,7 @@ class StatsView extends StatelessWidget {
               ),
               const SizedBox(height: 22),
               ResponsiveGrid(
-                itemExtent: 92,
+                itemExtent: 92 * MediaQuery.textScalerOf(context).scale(1),
                 children: [
                   StatTile(
                     label: s.t('totalXp'),
@@ -166,10 +166,7 @@ class StatsView extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: palette.card,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: palette.cardBorder,
-                      width: 1.5,
-                    ),
+                    border: Border.all(color: palette.cardBorder, width: 1.5),
                   ),
                   child: Row(
                     children: [

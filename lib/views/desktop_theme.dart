@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
 
-/// Semantic surface colors for the desktop shell, available in both
-/// brightness variants so every view reads colors from the active theme.
 @immutable
 class DesktopPalette extends ThemeExtension<DesktopPalette> {
   const DesktopPalette({
@@ -24,16 +22,10 @@ class DesktopPalette extends ThemeExtension<DesktopPalette> {
     sidebar: Color(0xFF171A26),
     card: Color(0xFF1E2231),
     cardBorder: Color(0xFF2C3247),
-    subtle: Color(0xFF9AA3BB),
+    // Brightened for high-contrast, comfortable secondary text in dark mode
+    // (~9.8:1 against the card surface, WCAG AAA).
+    subtle: Color(0xFFC5CDDD),
     track: Color(0xFF2C3247),
-  );
-
-  static const light = DesktopPalette(
-    sidebar: Color(0xFFF3F5FA),
-    card: Colors.white,
-    cardBorder: Color(0xFFE2E6F0),
-    subtle: Color(0xFF5D6579),
-    track: Color(0xFFE2E6F0),
   );
 
   @override
@@ -69,13 +61,13 @@ class DesktopPalette extends ThemeExtension<DesktopPalette> {
 DesktopPalette desktopPalette(BuildContext context) =>
     Theme.of(context).extension<DesktopPalette>() ?? DesktopPalette.dark;
 
-ThemeData buildDesktopTheme({bool dark = true}) {
-  final palette = dark ? DesktopPalette.dark : DesktopPalette.light;
-  final background = dark ? const Color(0xFF12141D) : const Color(0xFFFAFBFD);
-  final accent = dark ? const Color(0xFF7EE02E) : darkGreen;
+ThemeData buildDesktopTheme() {
+  const palette = DesktopPalette.dark;
+  const background = Color(0xFF12141D);
+  const accent = Color(0xFF7EE02E);
   final scheme = ColorScheme.fromSeed(
     seedColor: green,
-    brightness: dark ? Brightness.dark : Brightness.light,
+    brightness: Brightness.dark,
   ).copyWith(surface: background);
 
   return ThemeData(
@@ -91,7 +83,7 @@ ThemeData buildDesktopTheme({bool dark = true}) {
     ),
     navigationRailTheme: NavigationRailThemeData(
       backgroundColor: palette.sidebar,
-      indicatorColor: green.withValues(alpha: dark ? 0.22 : 0.16),
+      indicatorColor: green.withValues(alpha: 0.22),
       selectedIconTheme: IconThemeData(color: accent),
       unselectedIconTheme: IconThemeData(color: palette.subtle),
       selectedLabelTextStyle: TextStyle(
@@ -99,10 +91,7 @@ ThemeData buildDesktopTheme({bool dark = true}) {
         fontWeight: FontWeight.bold,
         fontSize: 13,
       ),
-      unselectedLabelTextStyle: TextStyle(
-        color: palette.subtle,
-        fontSize: 13,
-      ),
+      unselectedLabelTextStyle: TextStyle(color: palette.subtle, fontSize: 13),
     ),
     dividerTheme: DividerThemeData(
       color: palette.cardBorder,

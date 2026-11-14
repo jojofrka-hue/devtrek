@@ -1,47 +1,29 @@
 import 'package:flutter/material.dart';
 
 import '../app_scope.dart';
-import '../machine_structure/machine_structure_page.dart';
-import '../models/course.dart';
-import '../screens/achievements_page.dart';
+import '../machine_structure/machine_lessons.dart';
 import '../screens/bug_hunt_page.dart';
-import '../screens/course_page.dart';
-import '../screens/review_page.dart';
-import '../screens/settings_page.dart';
-import '../screens/sort_visualizer_page.dart';
 import '../services/app_services.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common.dart';
-import '../widgets/course_visuals.dart';
 import 'desktop_theme.dart';
 import 'desktop_widgets.dart';
 import 'devtrek_track.dart';
+import 'fx.dart';
 
-/// Desktop dashboard: track hero, stat pills, course grid and tool grid.
 class HomeView extends StatelessWidget {
   const HomeView({
     super.key,
     required this.track,
     required this.onOpenLearning,
     required this.onOpenPlayground,
-    required this.onOpenStats,
+    required this.onOpenSettings,
   });
 
   final DevTrekTrack track;
   final VoidCallback onOpenLearning;
   final VoidCallback onOpenPlayground;
-  final VoidCallback onOpenStats;
-
-  List<Course> _orderedCourses(AppServices services) {
-    final favorite = services.profile.favoriteCourse;
-    final preferred = services.repository.courses
-        .where((course) => course.id == favorite)
-        .toList();
-    final rest = services.repository.courses
-        .where((course) => course.id != favorite)
-        .toList();
-    return [...preferred, ...rest];
-  }
+  final VoidCallback onOpenSettings;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +35,7 @@ class HomeView extends StatelessWidget {
       child: ListenableBuilder(
         listenable: Listenable.merge([
           services.progress,
+          services.profile,
           services.streak,
           services.review,
           services.settings,
@@ -60,7 +43,6 @@ class HomeView extends StatelessWidget {
         builder: (context, _) {
           final progress = services.progress;
           final streak = services.streak;
-          final due = services.review.dueCount;
           final rank = s.t('rank_${progress.rankIndex}');
 
           return ListView(
@@ -81,30 +63,17 @@ class HomeView extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${services.profile.name.isEmpty ? 'Coder' : services.profile.name}'
+                          '${services.profile.name.trim().isEmpty ? s.t('welcomeBack') : s.t('welcomeName').replaceAll('{name}', services.profile.name)}'
                           '  •  ${s.t('rank')}: $rank',
                           style: TextStyle(fontSize: 13, color: palette.subtle),
                         ),
                       ],
                     ),
                   ),
-                  TextButton.icon(
-                    onPressed: services.settings.toggleLanguage,
-                    icon: const Icon(Icons.translate, size: 18),
-                    label: Text(
-                      s.t('languageShort'),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
                   IconButton(
                     tooltip: s.t('settingsTitle'),
                     icon: const Icon(Icons.settings_outlined),
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const SettingsPage(),
-                      ),
-                    ),
+                    onPressed: onOpenSettings,
                   ),
                 ],
               ),
@@ -138,96 +107,45 @@ class HomeView extends StatelessWidget {
                 services: services,
                 onContinue: onOpenLearning,
               ),
-              const SizedBox(height: 26),
-              SectionHeading(title: s.isArabic ? 'الدورات' : 'Courses'),
-              ResponsiveGrid(
-                itemExtent: 118,
-                children: [
-                  for (final course in _orderedCourses(services))
-                    _CourseCard(course: course),
-                ],
+              const SizedBox(height: 16),
+              _DailyGoalCard(
+                track: track,
+                services: services,
+                onOpenLearning: onOpenLearning,
               ),
-              const SizedBox(height: 26),
-              SectionHeading(
-                title: s.isArabic ? 'الأدوات والأقسام' : 'Tools & Sections',
-              ),
-              ResponsiveGrid(
-                children: [
-                  ToolCard(
-                    icon: Icons.terminal_rounded,
-                    title: s.t('playgroundTitle'),
-                    subtitle: s.t('playgroundSubtitle'),
-                    color: green,
-                    onTap: onOpenPlayground,
-                  ),
-                  ToolCard(
-                    icon: Icons.memory_rounded,
-                    title: s.t('machineTitle'),
-                    subtitle: s.t('machineSubtitle'),
-                    color: purple,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const MachineStructurePage(),
+              const SizedBox(height: 28),
+              SectionHeading(title: s.t('toolsSections')),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: palette.card.withValues(alpha: 0.45),
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(color: palette.cardBorder, width: 1),
+                ),
+                child: ResponsiveGrid(
+                  maxColumns: 2,
+                  itemExtent: 124 * MediaQuery.textScalerOf(context).scale(1),
+                  spacing: 16,
+                  children: [
+                    ToolCard(
+                      icon: Icons.terminal_rounded,
+                      title: s.t('playgroundTitle'),
+                      subtitle: s.t('playgroundSubtitle'),
+                      color: green,
+                      onTap: onOpenPlayground,
+                    ),
+                    ToolCard(
+                      icon: Icons.bug_report_outlined,
+                      title: s.t('bugHuntTitle'),
+                      subtitle: s.t('bugHuntSubtitle'),
+                      color: red,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const BugHuntPage()),
                       ),
                     ),
-                  ),
-                  ToolCard(
-                    icon: Icons.refresh_rounded,
-                    title: s.t('reviewTitle'),
-                    subtitle: due > 0
-                        ? '$due ${s.t('reviewDue')}'
-                        : s.t('reviewAllDone'),
-                    color: purple,
-                    badge: due > 0 ? '$due' : null,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const ReviewPage()),
-                    ),
-                  ),
-                  ToolCard(
-                    icon: Icons.insights_rounded,
-                    title: s.t('statsTitle'),
-                    subtitle: s.t('byTopic'),
-                    color: blue,
-                    onTap: onOpenStats,
-                  ),
-                  ToolCard(
-                    icon: Icons.bug_report_outlined,
-                    title: s.t('bugHuntTitle'),
-                    subtitle: s.t('bugHuntSubtitle'),
-                    color: red,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const BugHuntPage()),
-                    ),
-                  ),
-                  ToolCard(
-                    icon: Icons.bar_chart_rounded,
-                    title: s.t('visualizerTitle'),
-                    subtitle: s.t('algorithm'),
-                    color: green,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const SortVisualizerPage(),
-                      ),
-                    ),
-                  ),
-                  ToolCard(
-                    icon: Icons.military_tech_rounded,
-                    title: s.t('achievementsTitle'),
-                    subtitle:
-                        '${services.achievements.unlockedCount} / ${services.achievements.all.length} ${s.t('unlockedCount')}',
-                    color: const Color(0xFFF5A623),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const AchievementsPage(),
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           );
@@ -251,213 +169,279 @@ class _TrackHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = context.s;
-    final ar = s.isArabic;
     final palette = desktopPalette(context);
     final moduleCount = track.moduleCount(services);
     final done = track.completedCount(services);
     final stars = track.starsCount(services);
-    final hasProgress = track.course(services) != null;
 
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            track.color.withValues(alpha: 0.18),
-            green.withValues(alpha: 0.07),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: track.color.withValues(alpha: 0.4),
-          width: 1.5,
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 54,
-            height: 54,
-            decoration: BoxDecoration(
-              color: track.color.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Icon(track.icon, color: track.color, size: 28),
+    return HoverScale(
+      glow: track.color,
+      radius: 20,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              track.color.withValues(alpha: 0.18),
+              green.withValues(alpha: 0.07),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: track.color.withValues(alpha: 0.4),
+            width: 1.5,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
               children: [
-                Text(
-                  ar ? 'مسارك الحالي' : 'YOUR TRACK',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.8,
-                    color: palette.subtle,
-                  ),
+                AnimatedRing(
+                  value: moduleCount == 0 ? 0 : done / moduleCount,
+                  color: track.color,
+                  background: palette.track,
+                  size: 54,
+                  stroke: 5,
+                  center: Icon(track.icon, color: track.color, size: 24),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  track.label(ar),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  hasProgress
-                      ? '$done/$moduleCount ${ar ? 'وحدة مكتملة' : 'modules done'}'
-                            '  •  $stars/${moduleCount * 3} ${ar ? 'نجمة' : 'stars'}'
-                      : '$moduleCount ${ar ? 'درساً' : 'lessons'}',
-                  style: const TextStyle(
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.bold,
-                    color: green,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        s.t('yourTrack'),
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.8,
+                          color: palette.subtle,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        s.t('track_${track.name}'),
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '$done/$moduleCount ${s.t('modulesDone')}'
+                        '  •  $stars/${moduleCount * 3} ${s.t('stars')}',
+                        style: const TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.bold,
+                          color: green,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(width: 12),
-          FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: green,
-              foregroundColor: Colors.white,
+            const SizedBox(height: 16),
+            FilledButton.icon(
+              style: FilledButton.styleFrom(
+                backgroundColor: green,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: onContinue,
+              icon: const Icon(Icons.school_rounded, size: 18),
+              label: Text(
+                s.t('continueLearning'),
+                style: const TextStyle(
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-            onPressed: onContinue,
-            icon: const Icon(Icons.school_rounded, size: 18),
-            label: Text(
-              ar ? 'متابعة التعلم' : 'Continue',
-              style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-class _CourseCard extends StatelessWidget {
-  const _CourseCard({required this.course});
+/// Compact progress summary: today's goal on one side, the most recent
+/// activity on the other. Replaces the module grid, which lives in Learning.
+class _DailyGoalCard extends StatelessWidget {
+  const _DailyGoalCard({
+    required this.track,
+    required this.services,
+    required this.onOpenLearning,
+  });
 
-  final Course course;
+  final DevTrekTrack track;
+  final AppServices services;
+  final VoidCallback onOpenLearning;
 
   @override
   Widget build(BuildContext context) {
-    final services = context.services;
     final s = context.s;
+    final ar = s.isArabic;
     final palette = desktopPalette(context);
-    final progress = services.progress;
-    var done = 0;
-    var totalStars = 0;
-    for (var i = 0; i < course.levels.length; i++) {
-      final stars = progress.starsFor(course.id, i);
-      if (stars >= 1) done++;
-      totalStars += stars;
+    final streak = services.streak;
+    final reached = streak.activeToday;
+    final goalColor = reached ? green : amber;
+    final due = services.review.dueCount;
+    final count = track.moduleCount(services);
+    final course = track.course(services);
+
+    var lastIndex = -1;
+    for (var i = count - 1; i >= 0; i--) {
+      if (services.progress.starsFor(track.courseId, i) > 0) {
+        lastIndex = i;
+        break;
+      }
     }
-    final isFavorite = services.profile.favoriteCourse == course.id;
-    final color = courseColor(course);
+    final lastTitle = lastIndex < 0
+        ? s.t('noActivityYet')
+        : course == null
+        ? machineLessons[lastIndex].title(ar)
+        : course.levels[lastIndex].titleFor(ar);
+
+    final goal = Row(
+      children: [
+        AnimatedRing(
+          value: reached ? 1 : 0,
+          color: goalColor,
+          background: palette.track,
+          size: 46,
+          stroke: 4,
+          center: Icon(
+            reached ? Icons.check_rounded : Icons.flag_rounded,
+            color: goalColor,
+            size: 20,
+          ),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _SummaryLabel(text: s.t('dailyGoal'), color: palette.subtle),
+              const SizedBox(height: 4),
+              Text(
+                reached ? s.t('dailyGoalDone') : s.t('dailyGoalPending'),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '${streak.current} ${s.t('streakDays')}',
+                style: TextStyle(fontSize: 11.5, color: goalColor),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    final recent = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SummaryLabel(text: s.t('recentActivity'), color: palette.subtle),
+        const SizedBox(height: 4),
+        Text(
+          '${s.t('lastCompleted')}: $lastTitle',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 6),
+        Row(
+          children: [
+            Icon(
+              due > 0 ? Icons.replay_rounded : Icons.done_all_rounded,
+              size: 15,
+              color: due > 0 ? amber : green,
+            ),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                due > 0 ? '$due ${s.t('reviewDue')}' : s.t('reviewAllDone'),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 11.5, color: palette.subtle),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
 
     return Material(
       color: palette.card,
       borderRadius: BorderRadius.circular(18),
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => CoursePage(course: course)),
-        ),
+        onTap: onOpenLearning,
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
             border: Border.all(color: palette.cardBorder, width: 1.5),
           ),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Icon(
-                  courseIcon(course.iconKey),
-                  color: Colors.white,
-                  size: 26,
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth < 560) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            course.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 15.5,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        if (isFavorite) ...[
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 7,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: green,
-                              borderRadius: BorderRadius.circular(7),
-                            ),
-                            child: Text(
-                              s.t('startHere'),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
+                    goal,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Divider(height: 1, color: palette.cardBorder),
                     ),
-                    const SizedBox(height: 3),
-                    Text(
-                      course.subtitleFor(s.isArabic),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12, color: palette.subtle),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      '$done/${course.levels.length} ${s.t('levelsDone')}  •  '
-                      '$totalStars/${course.levels.length * 3} ${s.t('stars')}',
-                      style: const TextStyle(
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.bold,
-                        color: green,
-                      ),
-                    ),
+                    recent,
                   ],
-                ),
-              ),
-            ],
+                );
+              }
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(child: goal),
+                  Container(
+                    width: 1,
+                    height: 62,
+                    margin: const EdgeInsets.symmetric(horizontal: 18),
+                    color: palette.cardBorder,
+                  ),
+                  Expanded(child: recent),
+                ],
+              );
+            },
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _SummaryLabel extends StatelessWidget {
+  const _SummaryLabel({required this.text, required this.color});
+
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text.toUpperCase(),
+      style: TextStyle(
+        fontSize: 10.5,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 0.8,
+        color: color,
       ),
     );
   }

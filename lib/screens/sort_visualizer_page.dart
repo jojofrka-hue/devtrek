@@ -7,6 +7,7 @@ import '../app_scope.dart';
 import '../i18n/app_strings.dart';
 import '../services/sort_engine.dart';
 import '../theme/app_theme.dart';
+import '../views/desktop_theme.dart';
 import '../widgets/common.dart';
 
 class _Frame {
@@ -152,17 +153,16 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
       });
     }
     setState(() => _playing = true);
-    _timer = Timer.periodic(
-      Duration(milliseconds: _delays[_speed] ?? 200),
-      (timer) {
-        if (_index >= _frames.length - 1) {
-          timer.cancel();
-          setState(() => _playing = false);
-          return;
-        }
-        setState(() => _index++);
-      },
-    );
+    _timer = Timer.periodic(Duration(milliseconds: _delays[_speed] ?? 200), (
+      timer,
+    ) {
+      if (_index >= _frames.length - 1) {
+        timer.cancel();
+        setState(() => _playing = false);
+        return;
+      }
+      setState(() => _index++);
+    });
   }
 
   void _newArray() {
@@ -201,10 +201,11 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
 
   @override
   Widget build(BuildContext context) {
+    final palette = desktopPalette(context);
     final s = context.s;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: palette.sidebar,
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
@@ -240,7 +241,7 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
               padding: const EdgeInsets.symmetric(horizontal: 14),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Colors.grey.shade300, width: 2),
+                border: Border.all(color: palette.cardBorder, width: 2),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
@@ -249,22 +250,18 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
                   icon: const Icon(Icons.expand_more),
                   onChanged: _setAlgorithm,
                   items: [
-                    for (final key in _isSearch
-                        ? _searchAlgorithms
-                        : _sortAlgorithms)
+                    for (final key
+                        in _isSearch ? _searchAlgorithms : _sortAlgorithms)
                       DropdownMenuItem(
                         value: key,
-                        child: Text(
-                          switch (key) {
-                            'insertion' => s.t('insertionSort'),
-                            'selection' => s.t('selectionSort'),
-                            'quick' => s.t('quickSort'),
-                            'linear' => s.t('linearSearch'),
-                            'binary' => s.t('binarySearch'),
-                            _ => s.t('bubbleSort'),
-                          },
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                        child: Text(switch (key) {
+                          'insertion' => s.t('insertionSort'),
+                          'selection' => s.t('selectionSort'),
+                          'quick' => s.t('quickSort'),
+                          'linear' => s.t('linearSearch'),
+                          'binary' => s.t('binarySearch'),
+                          _ => s.t('bubbleSort'),
+                        }, style: const TextStyle(fontWeight: FontWeight.bold)),
                       ),
                   ],
                 ),
@@ -304,9 +301,9 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
               height: 240,
               padding: const EdgeInsets.fromLTRB(10, 16, 10, 8),
               decoration: BoxDecoration(
-                color: const Color(0xFFF7F9FC),
+                color: palette.card,
                 borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: Colors.grey.shade300, width: 2),
+                border: Border.all(color: palette.cardBorder, width: 2),
               ),
               child: Directionality(
                 textDirection: TextDirection.ltr,
@@ -333,7 +330,7 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
                     '${s.t('of')} ${_frames.length}',
                     style: TextStyle(
                       fontSize: 12.5,
-                      color: Colors.grey.shade600,
+                      color: palette.subtle,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -343,7 +340,7 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
                   style: const TextStyle(
                     fontSize: 12.5,
                     fontWeight: FontWeight.bold,
-                    color: darkGreen,
+                    color: green,
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -366,7 +363,7 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade700,
+                    color: palette.subtle,
                   ),
                 ),
                 Expanded(
@@ -381,7 +378,8 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
                       3 => 'x2',
                       _ => 'x1',
                     },
-                    onChanged: (value) => setState(() => _speed = value.round()),
+                    onChanged: (value) =>
+                        setState(() => _speed = value.round()),
                   ),
                 ),
               ],
@@ -425,6 +423,7 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
   }
 
   Widget _modeChip(String mode, String label) {
+    final palette = desktopPalette(context);
     final selected = _mode == mode;
     return InkWell(
       borderRadius: BorderRadius.circular(12),
@@ -433,18 +432,17 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
         height: 44,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: selected ? green.withValues(alpha: 0.12) : Colors.white,
+          color: selected
+              ? Color.alphaBlend(green.withValues(alpha: 0.15), palette.card)
+              : palette.card,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: selected ? green : Colors.grey.shade300,
-            width: 2,
-          ),
+          border: Border.all(color: palette.cardBorder, width: 2),
         ),
         child: Text(
           label,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: selected ? darkGreen : Colors.grey.shade700,
+            color: selected ? green : palette.subtle,
           ),
         ),
       ),
@@ -452,8 +450,9 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
   }
 
   Widget _bar(int index) {
+    final palette = desktopPalette(context);
     final frame = _frame;
-    var color = Colors.grey.shade400;
+    var color = palette.subtle;
     if (frame.found && frame.candidate == index) {
       color = green;
     } else if (frame.swapped.contains(index)) {
@@ -467,7 +466,7 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
     } else if (frame.candidate == index) {
       color = blue;
     } else if (frame.sorted.contains(index)) {
-      color = darkGreen;
+      color = green;
     }
 
     final value = frame.values[index];
@@ -481,7 +480,7 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
           style: TextStyle(
             fontSize: 9.5,
             fontWeight: FontWeight.bold,
-            color: Colors.grey.shade700,
+            color: palette.subtle,
           ),
         ),
         const SizedBox(height: 3),
@@ -490,9 +489,7 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
           height: height,
           decoration: BoxDecoration(
             color: color,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(6),
-            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
           ),
         ),
       ],
@@ -500,6 +497,7 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
   }
 
   Widget _statusCard(AppStrings s) {
+    final palette = desktopPalette(context);
     final done = _frames.isNotEmpty && _index >= _frames.length - 1;
     String text;
     Color color;
@@ -508,7 +506,7 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
     if (!_isSearch) {
       if (done) {
         text = s.t('sortedNote');
-        color = darkGreen;
+        color = green;
         icon = Icons.check_circle;
       } else {
         text = '${s.t('algorithm')}: ${_algorithmName(s)}';
@@ -518,7 +516,7 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
     } else if (done) {
       if (_foundIndex != null && _foundIndex! >= 0) {
         text = s.t('foundAt').replaceAll('{i}', '$_foundIndex');
-        color = darkGreen;
+        color = green;
         icon = Icons.my_location;
       } else {
         text = s.t('notFound');
@@ -534,9 +532,9 @@ class _SortVisualizerPageState extends State<SortVisualizerPage> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.09),
+        color: Color.alphaBlend(color.withValues(alpha: 0.15), palette.card),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: color.withValues(alpha: 0.5), width: 2),
+        border: Border.all(color: palette.cardBorder, width: 2),
       ),
       child: Row(
         children: [

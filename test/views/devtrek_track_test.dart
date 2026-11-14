@@ -51,7 +51,9 @@ void main() {
     expect(trackFromFavorite('python'), DevTrekTrack.python);
     expect(trackFromFavorite('machine'), DevTrekTrack.machine);
     expect(trackFromFavorite(''), DevTrekTrack.c);
-    expect(trackFromFavorite('cpp'), DevTrekTrack.c);
+    expect(trackFromFavorite('cpp'), DevTrekTrack.cpp);
+    expect(trackFromFavorite('java'), DevTrekTrack.java);
+    expect(trackFromFavorite('javascript'), DevTrekTrack.javascript);
   });
 
   test('track course ids match the content assets', () {

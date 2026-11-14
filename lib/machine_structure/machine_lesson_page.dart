@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../app_scope.dart';
 import '../i18n/app_strings.dart';
 import '../theme/app_theme.dart';
+import '../views/desktop_theme.dart';
 import '../widgets/common.dart';
 import 'machine_lessons.dart';
 
@@ -32,6 +33,7 @@ class _MachineLessonPageState extends State<MachineLessonPage> {
   Widget build(BuildContext context) {
     final s = context.s;
     final lesson = widget.lesson;
+    final palette = desktopPalette(context);
 
     return Scaffold(
       appBar: AppBar(title: Text(lesson.title(s.isArabic))),
@@ -42,7 +44,10 @@ class _MachineLessonPageState extends State<MachineLessonPage> {
             width: double.infinity,
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: blue.withValues(alpha: 0.08),
+              color: Color.alphaBlend(
+                blue.withValues(alpha: 0.15),
+                palette.card,
+              ),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Text(
@@ -54,10 +59,7 @@ class _MachineLessonPageState extends State<MachineLessonPage> {
           for (final section in lesson.sections) ...[
             Text(
               section.heading(s.isArabic),
-              style: const TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 6),
             Text(
@@ -82,8 +84,9 @@ class _MachineLessonPageState extends State<MachineLessonPage> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
+                  color: palette.card,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade300),
+                  border: Border.all(color: palette.cardBorder),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +103,7 @@ class _MachineLessonPageState extends State<MachineLessonPage> {
                       term.definition(s.isArabic),
                       style: TextStyle(
                         fontSize: 13,
-                        color: Colors.grey.shade700,
+                        color: palette.subtle,
                         height: 1.5,
                       ),
                     ),
@@ -117,10 +120,7 @@ class _MachineLessonPageState extends State<MachineLessonPage> {
           for (var i = 0; i < lesson.quiz.length; i++) ...[
             Text(
               '${i + 1}. ${lesson.quiz[i].question(s.isArabic)}',
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             for (var j = 0; j < lesson.quiz[i].options(s.isArabic).length; j++)
@@ -131,7 +131,7 @@ class _MachineLessonPageState extends State<MachineLessonPage> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: palette.sidebar,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
@@ -148,7 +148,10 @@ class _MachineLessonPageState extends State<MachineLessonPage> {
               width: double.infinity,
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: green.withValues(alpha: 0.1),
+                color: Color.alphaBlend(
+                  green.withValues(alpha: 0.15),
+                  palette.card,
+                ),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Text(
@@ -176,17 +179,24 @@ class _MachineLessonPageState extends State<MachineLessonPage> {
     final answered = _answers.containsKey(question);
     final chosen = _answers[question] == option;
     final isCorrect = option == quiz.correctIndex;
-    var border = Colors.grey.shade300;
-    var background = Colors.white;
+    final palette = desktopPalette(context);
+    var border = palette.cardBorder;
+    var background = palette.card;
     IconData? trailing;
     if (answered) {
       if (isCorrect) {
         border = green;
-        background = green.withValues(alpha: 0.1);
+        background = Color.alphaBlend(
+          green.withValues(alpha: 0.15),
+          palette.card,
+        );
         trailing = Icons.check_circle_rounded;
       } else if (chosen) {
         border = red;
-        background = red.withValues(alpha: 0.08);
+        background = Color.alphaBlend(
+          red.withValues(alpha: 0.15),
+          palette.card,
+        );
         trailing = Icons.cancel_rounded;
       }
     }

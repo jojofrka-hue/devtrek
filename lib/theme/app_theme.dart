@@ -14,17 +14,3 @@ const pairColors = [
   Color(0xFFFF4B8B),
   Color(0xFF00B894),
 ];
-
-ThemeData buildAppTheme() {
-  return ThemeData(
-    useMaterial3: true,
-    colorSchemeSeed: green,
-    scaffoldBackgroundColor: Colors.white,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.white,
-      surfaceTintColor: Colors.transparent,
-      elevation: 0,
-    ),
-    snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
-  );
-}

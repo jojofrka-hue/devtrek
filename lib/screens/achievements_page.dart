@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../app_scope.dart';
 import '../theme/app_theme.dart';
+import '../views/desktop_theme.dart';
 import '../widgets/common.dart';
 
 class AchievementsPage extends StatelessWidget {
@@ -9,11 +10,12 @@ class AchievementsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = desktopPalette(context);
     final services = context.services;
     final s = context.s;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: palette.sidebar,
       body: SafeArea(
         child: ListenableBuilder(
           listenable: services.achievements,
@@ -52,26 +54,22 @@ class AchievementsPage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFFFF6D9), Color(0xFFFFE9B8)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                    color: Color.alphaBlend(
+                      const Color(0xFFF5A623).withValues(alpha: 0.15),
+                      palette.card,
                     ),
                     borderRadius: BorderRadius.circular(18),
-                    border: Border.all(
-                      color: const Color(0xFFF5A623).withValues(alpha: 0.5),
-                      width: 2,
-                    ),
+                    border: Border.all(color: palette.cardBorder, width: 2),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         '$unlocked / ${all.length} ${s.t('unlockedCount')}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF8A5B00),
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -80,7 +78,7 @@ class AchievementsPage extends StatelessWidget {
                         child: LinearProgressIndicator(
                           value: ratio,
                           minHeight: 12,
-                          backgroundColor: Colors.white70,
+                          backgroundColor: palette.track,
                           color: const Color(0xFFF5A623),
                         ),
                       ),
@@ -92,13 +90,12 @@ class AchievementsPage extends StatelessWidget {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: all.length,
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 12,
-                        crossAxisSpacing: 12,
-                        childAspectRatio: 0.86,
-                      ),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    childAspectRatio: 0.86,
+                  ),
                   itemBuilder: (context, index) {
                     final badge = all[index];
                     final isUnlocked = services.achievements.isUnlocked(
@@ -108,15 +105,13 @@ class AchievementsPage extends StatelessWidget {
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
                         color: isUnlocked
-                            ? const Color(0xFFFFFBF0)
-                            : const Color(0xFFF7F7F7),
+                            ? Color.alphaBlend(
+                                const Color(0xFFF5A623).withValues(alpha: 0.15),
+                                palette.card,
+                              )
+                            : palette.card,
                         borderRadius: BorderRadius.circular(18),
-                        border: Border.all(
-                          color: isUnlocked
-                              ? const Color(0xFFF5A623)
-                              : Colors.grey.shade300,
-                          width: 2,
-                        ),
+                        border: Border.all(color: palette.cardBorder, width: 2),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +120,7 @@ class AchievementsPage extends StatelessWidget {
                             badge.icon,
                             style: TextStyle(
                               fontSize: 34,
-                              color: isUnlocked ? null : Colors.grey,
+                              color: isUnlocked ? null : palette.subtle,
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -135,8 +130,8 @@ class AchievementsPage extends StatelessWidget {
                               fontSize: 14.5,
                               fontWeight: FontWeight.bold,
                               color: isUnlocked
-                                  ? Colors.black87
-                                  : Colors.grey.shade600,
+                                  ? Theme.of(context).colorScheme.onSurface
+                                  : palette.subtle,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -146,7 +141,7 @@ class AchievementsPage extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 12,
                                 height: 1.35,
-                                color: Colors.grey.shade700,
+                                color: palette.subtle,
                               ),
                             ),
                           ),
@@ -157,9 +152,7 @@ class AchievementsPage extends StatelessWidget {
                                     ? Icons.check_circle
                                     : Icons.lock_outline,
                                 size: 15,
-                                color: isUnlocked
-                                    ? darkGreen
-                                    : Colors.grey.shade500,
+                                color: isUnlocked ? green : palette.subtle,
                               ),
                               const SizedBox(width: 4),
                               Text(
@@ -169,9 +162,7 @@ class AchievementsPage extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 11.5,
                                   fontWeight: FontWeight.bold,
-                                  color: isUnlocked
-                                      ? darkGreen
-                                      : Colors.grey.shade600,
+                                  color: isUnlocked ? green : palette.subtle,
                                 ),
                               ),
                             ],

@@ -27,7 +27,7 @@ class _RecordingRunner extends CodeRunner {
     calls.add(language);
     lastSource = source;
     return const RunOutcome(
-      stdout: 'Hello, Coding Quest!\n',
+      stdout: 'Hello, DevTrek!\n',
       exitCode: 0,
       elapsed: Duration(milliseconds: 12),
     );
@@ -78,12 +78,14 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(runner.calls, [PlayLanguage.c]);
-    expect(runner.lastSource, contains('printf("Hello, Coding Quest!'));
-    expect(find.textContaining('Hello, Coding Quest!\n'), findsOneWidget);
+    expect(runner.lastSource, contains('printf("Hello, DevTrek!'));
+    expect(find.textContaining('Hello, DevTrek!\n'), findsOneWidget);
     expect(find.textContaining('exit code: 0'), findsOneWidget);
   });
 
-  testWidgets('RUN after switching language sends Python source', (tester) async {
+  testWidgets('RUN after switching language sends Python source', (
+    tester,
+  ) async {
     await pumpPage(tester);
     await tester.tap(find.text('Python'));
     await tester.pumpAndSettle();
@@ -91,8 +93,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(runner.calls, [PlayLanguage.python]);
-    expect(runner.lastSource, contains('print("Hello, Coding Quest!")'));
-    expect(find.textContaining('Hello, Coding Quest!\n'), findsOneWidget);
+    expect(runner.lastSource, contains('print("Hello, DevTrek!")'));
+    expect(find.textContaining('Hello, DevTrek!\n'), findsOneWidget);
     expect(find.textContaining('exit code: 0'), findsOneWidget);
   });
 }

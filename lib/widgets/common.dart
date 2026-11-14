@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
+import '../views/desktop_theme.dart';
 
 Widget starRow(int count, {double size = 20}) {
-  return Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      for (var i = 0; i < 3; i++)
-        Icon(
-          i < count ? Icons.star_rounded : Icons.star_border_rounded,
-          color: i < count ? Colors.amber : Colors.grey.shade400,
-          size: size,
-        ),
-    ],
+  return Builder(
+    builder: (context) => Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (var i = 0; i < 3; i++)
+          Icon(
+            i < count ? Icons.star_rounded : Icons.star_border_rounded,
+            color: i < count ? Colors.amber : desktopPalette(context).subtle,
+            size: size,
+          ),
+      ],
+    ),
   );
 }
 
@@ -38,7 +41,7 @@ class BigButton extends StatelessWidget {
       child: FilledButton(
         style: FilledButton.styleFrom(
           backgroundColor: color,
-          disabledBackgroundColor: Colors.grey.shade300,
+          disabledBackgroundColor: desktopPalette(context).track,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -86,6 +89,7 @@ class ChoiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = desktopPalette(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -95,10 +99,12 @@ class ChoiceCard extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: selected ? const Color(0xFFDDF4FF) : Colors.white,
+            color: selected
+                ? Color.alphaBlend(blue.withValues(alpha: 0.15), palette.card)
+                : palette.card,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: selected ? blue : Colors.grey.shade300,
+              color: selected ? blue : palette.cardBorder,
               width: 2,
             ),
           ),
@@ -131,10 +137,7 @@ class ChoiceCard extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         subtitle!,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey.shade600,
-                        ),
+                        style: TextStyle(fontSize: 13, color: palette.subtle),
                       ),
                     ],
                   ],
@@ -192,15 +195,16 @@ class SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = desktopPalette(context);
     return InkWell(
       borderRadius: BorderRadius.circular(18),
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: palette.card,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.grey.shade300, width: 2),
+          border: Border.all(color: palette.cardBorder, width: 2),
         ),
         child: Row(
           children: [
@@ -208,7 +212,10 @@ class SectionCard extends StatelessWidget {
               width: 46,
               height: 46,
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.14),
+                color: Color.alphaBlend(
+                  color.withValues(alpha: 0.14),
+                  palette.card,
+                ),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: color),
@@ -229,10 +236,7 @@ class SectionCard extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       subtitle!,
-                      style: TextStyle(
-                        fontSize: 12.5,
-                        color: Colors.grey.shade600,
-                      ),
+                      style: TextStyle(fontSize: 12.5, color: palette.subtle),
                     ),
                   ],
                 ],
@@ -240,10 +244,7 @@ class SectionCard extends StatelessWidget {
             ),
             if (badge != null)
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 3,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
                   color: color,
                   borderRadius: BorderRadius.circular(10),
@@ -258,7 +259,7 @@ class SectionCard extends StatelessWidget {
                 ),
               )
             else
-              Icon(Icons.chevron_right, color: Colors.grey.shade400),
+              Icon(Icons.chevron_right, color: palette.subtle),
           ],
         ),
       ),
@@ -283,7 +284,10 @@ class StatPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
+        color: Color.alphaBlend(
+          color.withValues(alpha: 0.12),
+          desktopPalette(context).card,
+        ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(

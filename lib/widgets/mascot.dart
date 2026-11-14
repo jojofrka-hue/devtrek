@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
+import '../views/desktop_theme.dart';
 
 class Mascot extends StatelessWidget {
-  const Mascot({
-    super.key,
-    this.mood = 'idle',
-    this.message,
-    this.size = 62,
-  });
+  const Mascot({super.key, this.mood = 'idle', this.message, this.size = 62});
 
   final String mood;
   final String? message;
@@ -23,12 +19,16 @@ class Mascot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = desktopPalette(context);
     final face = Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFE7F8D4), Color(0xFFDDF4FF)],
+        gradient: LinearGradient(
+          colors: [
+            Color.alphaBlend(green.withValues(alpha: 0.18), palette.card),
+            Color.alphaBlend(blue.withValues(alpha: 0.18), palette.card),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -50,9 +50,9 @@ class Mascot extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: const Color(0xFFF7F7F7),
+              color: palette.card,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Colors.grey.shade300),
+              border: Border.all(color: palette.cardBorder),
             ),
             child: Text(
               message!,
