@@ -7,6 +7,7 @@ import '../services/app_services.dart';
 import '../theme/app_theme.dart';
 
 const devTrekBrand = 'DevTrek';
+const devTrekVersion = 'v1.0.0';
 
 enum DevTrekTrack { c, python, machine, cpp, java, javascript }
 

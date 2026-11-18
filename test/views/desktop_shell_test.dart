@@ -177,10 +177,47 @@ void main() {
     expect(find.byType(NavigationBar), findsOneWidget);
     expect(find.text('Coding Quest'), findsNothing);
     expect(find.text('Playground'), findsOneWidget);
+    expect(find.text('v1.0.0'), findsNothing);
 
     await tester.tap(find.text('Playground'));
     await tester.pumpAndSettle();
     expect(find.text('RUN'), findsOneWidget);
+  });
+
+  testWidgets(
+    'sidebar footer pins the active track and version at the bottom',
+    (tester) async {
+      await pumpShell(tester);
+      expect(find.text('Active Track: C'), findsOneWidget);
+      expect(find.text('v1.0.0'), findsOneWidget);
+
+      final footer = tester.getRect(find.text('Active Track: C'));
+      final settings = tester.getRect(find.text('Settings'));
+      expect(footer.top, greaterThan(settings.bottom));
+      expect(footer.left, lessThan(232));
+
+      // Still pinned inside the viewport at the default 1280x720 window.
+      await pumpShell(tester, size: const Size(1280, 720));
+      expect(
+        tester.getRect(find.text('v1.0.0')).bottom,
+        lessThanOrEqualTo(720),
+      );
+    },
+  );
+
+  testWidgets('sidebar footer follows the track picked in Settings', (
+    tester,
+  ) async {
+    await pumpShell(tester);
+    await tester.tap(find.text('Settings'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('settings-track')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Python').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Active Track: Python'), findsOneWidget);
+    expect(find.text('Active Track: C'), findsNothing);
   });
 
   testWidgets('arabic locale translates the rail labels', (tester) async {

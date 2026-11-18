@@ -261,7 +261,7 @@ const Map<String, String> _en = {
   'yourTrack': 'YOUR TRACK',
   'modulesDone': 'modules done',
   'done': 'done',
-  'activeTrack': 'Active track',
+  'activeTrack': 'Active Track',
   'home': 'Home',
   'learning': 'Learning',
   'playground': 'Playground',
