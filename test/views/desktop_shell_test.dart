@@ -2,6 +2,7 @@ import 'package:coding_quest/app_scope.dart';
 import 'package:coding_quest/playground/code_runner.dart';
 import 'package:coding_quest/services/app_services.dart';
 import 'package:coding_quest/views/desktop_shell.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -219,6 +220,107 @@ void main() {
     expect(find.text('Active Track: Python'), findsOneWidget);
     expect(find.text('Active Track: C'), findsNothing);
   });
+
+  for (final size in const [Size(1280, 720), Size(600, 1000)]) {
+    testWidgets('leaving Playground pauses trace playback at $size', (
+      tester,
+    ) async {
+      await pumpShell(tester, size: size);
+      await tester.tap(find.text('Playground'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Algorithm Trace'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('trace-run')));
+      await tester.pump(const Duration(milliseconds: 700));
+      await tester.tap(find.text('Home'));
+      await tester.pumpAndSettle();
+      final status = find.byKey(
+        const ValueKey('trace-status'),
+        skipOffstage: false,
+      );
+      final paused = tester.widget<Text>(status).data;
+      expect(paused, startsWith('Paused'));
+      await tester.pump(const Duration(seconds: 3));
+      expect(tester.widget<Text>(status).data, paused);
+      await tester.tap(find.text('Playground'));
+      await tester.pumpAndSettle();
+      expect(tester.widget<Text>(status).data, paused);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  for (final entry in const {
+    'en': [
+      'Dashboard and progress overview',
+      'Guided levels and exercise bank',
+      'Local code execution and algorithm tracing',
+      'Learning progress and answer accuracy',
+      'Track, preferences and about DevTrek',
+    ],
+    'ar': [
+      'لوحة المتابعة وملخص تقدّمك',
+      'مستويات موجّهة وبنك التمارين',
+      'تشغيل الكود محلياً وتتبّع الخوارزميات',
+      'تقدّم التعلّم ودقة الإجابات',
+      'المسار والتفضيلات وحول DevTrek',
+    ],
+  }.entries) {
+    testWidgets(
+      '${entry.key} rail labels and icons show descriptive hover hints',
+      (tester) async {
+        await pumpShell(tester, locale: Locale(entry.key));
+        final rail = tester.widget<NavigationRail>(find.byType(NavigationRail));
+        expect(rail.minExtendedWidth, 232);
+        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await mouse.addPointer(location: const Offset(1200, 1700));
+        addTearDown(mouse.removePointer);
+
+        for (var index = 0; index < rail.destinations.length; index++) {
+          final destination = rail.destinations[index];
+          final hint = entry.value[index];
+          for (final widget in [
+            destination.label,
+            destination.icon,
+            destination.selectedIcon,
+          ]) {
+            expect((widget as Tooltip).message, hint);
+          }
+          for (final target in [
+            destination.label,
+            index == rail.selectedIndex
+                ? destination.selectedIcon
+                : destination.icon,
+          ]) {
+            await mouse.moveTo(tester.getCenter(find.byWidget(target)));
+            await tester.pump(const Duration(seconds: 1));
+            await tester.pumpAndSettle();
+            expect(find.text(hint), findsOneWidget);
+            await mouse.moveTo(const Offset(1200, 1700));
+            await tester.pump(const Duration(seconds: 1));
+            await tester.pumpAndSettle();
+            expect(find.text(hint), findsNothing);
+          }
+        }
+      },
+    );
+
+    testWidgets('${entry.key} compact destinations include descriptive hints', (
+      tester,
+    ) async {
+      await pumpShell(
+        tester,
+        size: const Size(600, 1000),
+        locale: Locale(entry.key),
+      );
+      final destinations = tester.widgetList<NavigationDestination>(
+        find.byType(NavigationDestination),
+      );
+      expect(
+        destinations.map((destination) => destination.tooltip),
+        entry.value,
+      );
+    });
+  }
 
   testWidgets('arabic locale translates the rail labels', (tester) async {
     await pumpShell(tester, locale: const Locale('ar'));

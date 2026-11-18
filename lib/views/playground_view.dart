@@ -8,13 +8,10 @@ import '../theme/app_theme.dart';
 import '../widgets/common.dart';
 import 'desktop_theme.dart';
 import 'fx.dart';
-import 'register_tracker.dart';
+import 'algorithm_trace.dart';
 
-enum _PlayMode { c, python, machine }
+enum _PlayMode { c, python, trace }
 
-/// Desktop playground with three modes: a C editor, a Python editor and a
-/// Structure Machine emulator (Register Tracker). C/Python reuse [CodeRunner]
-/// and the shared samples; the machine mode hosts the hand-built CPU emulator.
 class PlaygroundView extends StatefulWidget {
   const PlaygroundView({super.key, this.runner});
 
@@ -144,37 +141,52 @@ class _PlaygroundViewState extends State<PlaygroundView> {
             spacing: 10,
             runSpacing: 10,
             children: [
-              _ModeButton(
-                icon: Icons.code_rounded,
-                label: 'C',
-                color: purple,
-                selected: _mode == _PlayMode.c,
-                onTap: () => _switchMode(_PlayMode.c),
+              Tooltip(
+                message: s.isArabic
+                    ? 'كتابة برامج C وترجمتها وتشغيلها محلياً'
+                    : 'Write, compile and run C programs locally',
+                child: _ModeButton(
+                  icon: Icons.code_rounded,
+                  label: 'C',
+                  color: purple,
+                  selected: _mode == _PlayMode.c,
+                  onTap: () => _switchMode(_PlayMode.c),
+                ),
               ),
-              _ModeButton(
-                icon: Icons.terminal_rounded,
-                label: 'Python',
-                color: const Color(0xFFFFC800),
-                selected: _mode == _PlayMode.python,
-                onTap: () => _switchMode(_PlayMode.python),
+              Tooltip(
+                message: s.isArabic
+                    ? 'كتابة برامج Python وتشغيلها محلياً'
+                    : 'Write and run Python programs locally',
+                child: _ModeButton(
+                  icon: Icons.terminal_rounded,
+                  label: 'Python',
+                  color: const Color(0xFFFFC800),
+                  selected: _mode == _PlayMode.python,
+                  onTap: () => _switchMode(_PlayMode.python),
+                ),
               ),
-              _ModeButton(
-                icon: Icons.memory_rounded,
-                label: s.isArabic ? 'معمارية الحاسوب' : 'Structure Machine',
-                color: blue,
-                selected: _mode == _PlayMode.machine,
-                onTap: () => _switchMode(_PlayMode.machine),
+              Tooltip(
+                message: s.isArabic
+                    ? 'تتبّع خوارزميات C الجاهزة خطوة بخطوة'
+                    : 'Trace preset C algorithms one statement at a time',
+                child: _ModeButton(
+                  icon: Icons.account_tree_rounded,
+                  label: s.isArabic ? 'تتبّع الخوارزميات' : 'Algorithm Trace',
+                  color: blue,
+                  selected: _mode == _PlayMode.trace,
+                  onTap: () => _switchMode(_PlayMode.trace),
+                ),
               ),
             ],
           ),
           const SizedBox(height: 14),
-          if (_mode != _PlayMode.machine) ...[
+          if (_mode != _PlayMode.trace) ...[
             _toolchainBanner(s, palette),
             const SizedBox(height: 14),
           ],
           Expanded(
-            child: _mode == _PlayMode.machine
-                ? const RegisterTracker()
+            child: _mode == _PlayMode.trace
+                ? const AlgorithmTrace()
                 : _codeWorkspace(s, palette),
           ),
         ],
@@ -300,10 +312,19 @@ class _PlaygroundViewState extends State<PlaygroundView> {
           hoverScale: 1.01,
           glow: _running ? null : green,
           radius: 16,
-          child: BigButton(
-            label: s.t('run'),
-            icon: Icons.play_arrow_rounded,
-            onPressed: _running ? null : _run,
+          child: Tooltip(
+            message: _language == PlayLanguage.c
+                ? (s.isArabic
+                      ? 'ترجمة كود C وتشغيله محلياً باستخدام الإدخال المحدد'
+                      : 'Compile and run C locally with the supplied input')
+                : (s.isArabic
+                      ? 'تشغيل Python محلياً باستخدام الإدخال المحدد'
+                      : 'Run Python locally with the supplied input'),
+            child: BigButton(
+              label: s.t('run'),
+              icon: Icons.play_arrow_rounded,
+              onPressed: _running ? null : _run,
+            ),
           ),
         ),
         if (_running) ...[

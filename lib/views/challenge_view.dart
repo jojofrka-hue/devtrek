@@ -370,16 +370,6 @@ class _ChallengeViewState extends State<ChallengeView> {
                 ),
                 const SizedBox(width: 10),
               ],
-              const Icon(Icons.favorite, color: red, size: 20),
-              const SizedBox(width: 4),
-              Text(
-                '$_hearts',
-                style: const TextStyle(
-                  color: red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
             ],
           ),
         ),

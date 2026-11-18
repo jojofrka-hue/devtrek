@@ -28,6 +28,7 @@ class _DesktopShellState extends State<DesktopShell> {
   Widget build(BuildContext context) {
     final s = context.s;
     final services = context.services;
+    final tooltips = _navigationTooltips(s.isArabic);
 
     return ListenableBuilder(
       listenable: services.profile,
@@ -116,58 +117,43 @@ class _DesktopShellState extends State<DesktopShell> {
                                                       () => _index = index,
                                                     ),
                                                 destinations: [
-                                                  NavigationRailDestination(
-                                                    icon: const Icon(
-                                                      Icons.home_outlined,
-                                                    ),
-                                                    selectedIcon: const Icon(
-                                                      Icons.home_rounded,
-                                                    ),
-                                                    label: Text(s.t('home')),
+                                                  _railDestination(
+                                                    icon: Icons.home_outlined,
+                                                    selectedIcon:
+                                                        Icons.home_rounded,
+                                                    label: s.t('home'),
+                                                    tooltip: tooltips[0],
                                                   ),
-                                                  NavigationRailDestination(
-                                                    icon: const Icon(
-                                                      Icons.school_outlined,
-                                                    ),
-                                                    selectedIcon: const Icon(
-                                                      Icons.school_rounded,
-                                                    ),
-                                                    label: Text(
-                                                      s.t('learning'),
-                                                    ),
+                                                  _railDestination(
+                                                    icon: Icons.school_outlined,
+                                                    selectedIcon:
+                                                        Icons.school_rounded,
+                                                    label: s.t('learning'),
+                                                    tooltip: tooltips[1],
                                                   ),
-                                                  NavigationRailDestination(
-                                                    icon: const Icon(
-                                                      Icons.terminal_outlined,
-                                                    ),
-                                                    selectedIcon: const Icon(
-                                                      Icons.terminal_rounded,
-                                                    ),
-                                                    label: Text(
-                                                      s.t('playground'),
-                                                    ),
+                                                  _railDestination(
+                                                    icon:
+                                                        Icons.terminal_outlined,
+                                                    selectedIcon:
+                                                        Icons.terminal_rounded,
+                                                    label: s.t('playground'),
+                                                    tooltip: tooltips[2],
                                                   ),
-                                                  NavigationRailDestination(
-                                                    icon: const Icon(
-                                                      Icons.insights_outlined,
-                                                    ),
-                                                    selectedIcon: const Icon(
-                                                      Icons.insights_rounded,
-                                                    ),
-                                                    label: Text(
-                                                      s.t('statsTitle'),
-                                                    ),
+                                                  _railDestination(
+                                                    icon:
+                                                        Icons.insights_outlined,
+                                                    selectedIcon:
+                                                        Icons.insights_rounded,
+                                                    label: s.t('statsTitle'),
+                                                    tooltip: tooltips[3],
                                                   ),
-                                                  NavigationRailDestination(
-                                                    icon: const Icon(
-                                                      Icons.settings_outlined,
-                                                    ),
-                                                    selectedIcon: const Icon(
-                                                      Icons.settings_rounded,
-                                                    ),
-                                                    label: Text(
-                                                      s.t('settingsTitle'),
-                                                    ),
+                                                  _railDestination(
+                                                    icon:
+                                                        Icons.settings_outlined,
+                                                    selectedIcon:
+                                                        Icons.settings_rounded,
+                                                    label: s.t('settingsTitle'),
+                                                    tooltip: tooltips[4],
                                                   ),
                                                 ],
                                               ),
@@ -195,7 +181,12 @@ class _DesktopShellState extends State<DesktopShell> {
                             onOpenSettings: () => setState(() => _index = 4),
                           ),
                           LearningView(track: track),
-                          PlaygroundView(runner: widget.playgroundRunner),
+                          TickerMode(
+                            enabled: _index == 2,
+                            child: PlaygroundView(
+                              runner: widget.playgroundRunner,
+                            ),
+                          ),
                           const StatsView(),
                           const SettingsPage(showBackButton: false),
                         ],
@@ -211,10 +202,36 @@ class _DesktopShellState extends State<DesktopShell> {
     );
   }
 
+  List<String> _navigationTooltips(bool ar) => [
+    ar ? 'لوحة المتابعة وملخص تقدّمك' : 'Dashboard and progress overview',
+    ar ? 'مستويات موجّهة وبنك التمارين' : 'Guided levels and exercise bank',
+    ar
+        ? 'تشغيل الكود محلياً وتتبّع الخوارزميات'
+        : 'Local code execution and algorithm tracing',
+    ar
+        ? 'تقدّم التعلّم ودقة الإجابات'
+        : 'Learning progress and answer accuracy',
+    ar
+        ? 'المسار والتفضيلات وحول DevTrek'
+        : 'Track, preferences and about DevTrek',
+  ];
+
+  NavigationRailDestination _railDestination({
+    required IconData icon,
+    required IconData selectedIcon,
+    required String label,
+    required String tooltip,
+  }) => NavigationRailDestination(
+    icon: Tooltip(message: tooltip, child: Icon(icon)),
+    selectedIcon: Tooltip(message: tooltip, child: Icon(selectedIcon)),
+    label: Tooltip(message: tooltip, child: Text(label)),
+  );
+
   Widget _compactShell(BuildContext context) {
     final services = context.services;
     final s = context.s;
     final track = currentTrack(services);
+    final tooltips = _navigationTooltips(s.isArabic);
     return Theme(
       data: buildDesktopTheme(),
       child: Scaffold(
@@ -234,7 +251,10 @@ class _DesktopShellState extends State<DesktopShell> {
               onOpenSettings: () => setState(() => _index = 4),
             ),
             LearningView(track: track),
-            PlaygroundView(runner: widget.playgroundRunner),
+            TickerMode(
+              enabled: _index == 2,
+              child: PlaygroundView(runner: widget.playgroundRunner),
+            ),
             const StatsView(),
             const SettingsPage(showBackButton: false),
           ],
@@ -246,22 +266,27 @@ class _DesktopShellState extends State<DesktopShell> {
             NavigationDestination(
               icon: const Icon(Icons.home_outlined),
               label: s.t('home'),
+              tooltip: tooltips[0],
             ),
             NavigationDestination(
               icon: const Icon(Icons.school_outlined),
               label: s.t('navLearning'),
+              tooltip: tooltips[1],
             ),
             NavigationDestination(
               icon: const Icon(Icons.terminal_rounded),
               label: s.t('navPlayground'),
+              tooltip: tooltips[2],
             ),
             NavigationDestination(
               icon: const Icon(Icons.insights_outlined),
               label: s.t('navStats'),
+              tooltip: tooltips[3],
             ),
             NavigationDestination(
               icon: const Icon(Icons.settings_outlined),
               label: s.t('settingsTitle'),
+              tooltip: tooltips[4],
             ),
           ],
         ),

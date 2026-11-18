@@ -93,6 +93,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: [
                     if (widget.showBackButton) ...[
                       IconButton(
+                        tooltip: s.isArabic ? 'رجوع' : 'Back',
                         icon: const Icon(Icons.arrow_back),
                         onPressed: () => Navigator.pop(context),
                       ),
@@ -248,6 +249,8 @@ class _SettingsPageState extends State<SettingsPage> {
                             '${services.repository.placementQuestions.length}',
                 ),
                 const Divider(height: 28),
+                _aboutCard(),
+                const Divider(height: 28),
                 BigButton(
                   label: s.t('rerunSetup'),
                   icon: Icons.restart_alt,
@@ -265,6 +268,72 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             );
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _aboutCard() {
+    final s = context.s;
+    final palette = desktopPalette(context);
+    return Card(
+      key: const ValueKey('settings-about'),
+      margin: EdgeInsets.zero,
+      color: palette.card,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: palette.cardBorder),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.info_outline_rounded, color: blue, size: 22),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    s.isArabic ? 'حول DevTrek' : 'About DevTrek',
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  devTrekVersion,
+                  textDirection: TextDirection.ltr,
+                  style: TextStyle(fontSize: 12, color: palette.subtle),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              s.isArabic
+                  ? 'تعلّم لغة C والخوارزميات لطلاب علوم الحاسوب، بتجربة مصممة لسطح المكتب ومبنية باستخدام Flutter Desktop.'
+                  : 'Desktop-first C & Algorithms learning for computer science students, built with Flutter Desktop.',
+              style: TextStyle(
+                fontSize: 13,
+                height: 1.6,
+                color: palette.subtle,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              s.isArabic
+                  ? 'شغّل كود C وPython محلياً. اتبع دراسة موجّهة عبر مستويات منظّمة، أو اختر التدريب الفردي من بنك التمارين.'
+                  : 'Run C/Python code locally. Follow guided study through structured levels, or choose individual practice from the exercise bank.',
+              style: TextStyle(
+                fontSize: 13,
+                height: 1.6,
+                color: palette.subtle,
+              ),
+            ),
+          ],
         ),
       ),
     );

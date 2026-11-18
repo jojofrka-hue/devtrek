@@ -29,10 +29,15 @@ Question _q(String id, QType type) => Question(
   explanationAr: 'ش',
 );
 
-Level _level(String id, String title, List<Question> questions) => Level(
+Level _level(
+  String id,
+  String title,
+  List<Question> questions, {
+  String? titleAr,
+}) => Level(
   id: id,
   title: title,
-  titleAr: title,
+  titleAr: titleAr ?? title,
   subtitle: 'sub',
   subtitleAr: 'sub',
   intro: 'intro',
@@ -82,7 +87,11 @@ void main() {
     );
   });
 
-  Future<void> pumpAt(WidgetTester tester, Widget home) async {
+  Future<void> pumpAt(
+    WidgetTester tester,
+    Widget home, {
+    Locale locale = const Locale('en'),
+  }) async {
     tester.view.physicalSize = const Size(1280, 1800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -91,7 +100,7 @@ void main() {
       AppScope(
         services: services,
         child: MaterialApp(
-          locale: const Locale('en'),
+          locale: locale,
           supportedLocales: const [Locale('en'), Locale('ar')],
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
@@ -204,6 +213,53 @@ void main() {
     expect(find.text('Creation 1'), findsOneWidget);
     expect(find.text('Application 1'), findsOneWidget);
   });
+
+  for (final locale in const [Locale('en'), Locale('ar')]) {
+    testWidgets('guided level titles do not repeat difficulty in $locale', (
+      tester,
+    ) async {
+      const difficulties = [
+        (en: 'Beginner', ar: 'مبتدئ'),
+        (en: 'Intermediate', ar: 'متوسط'),
+        (en: 'Advanced', ar: 'متقدم'),
+      ];
+      services = await AppServices.create(
+        store: MemoryStore(),
+        repository: CourseRepository.fromData(
+          courses: [
+            _course('c', 'C Foundations', [
+              for (var i = 0; i < difficulties.length; i++)
+                _level('c-${i + 1}', 'Level ${i + 1}: ${difficulties[i].en}', [
+                  _q('c-${i + 1}-1', QType.choice),
+                ], titleAr: 'المستوى ${i + 1}: ${difficulties[i].ar}'),
+            ]),
+          ],
+        ),
+      );
+      await completeOnboarding('c');
+      await pumpAt(
+        tester,
+        DesktopShell(
+          playgroundRunner: CodeRunner(pythonCandidates: [], cCandidates: []),
+        ),
+        locale: locale,
+      );
+      final ar = locale.languageCode == 'ar';
+      await tester.tap(find.text(ar ? 'التعلم' : 'Learning'));
+      await tester.pumpAndSettle();
+
+      for (var i = 0; i < difficulties.length; i++) {
+        final label = ar ? difficulties[i].ar : difficulties[i].en;
+        final title = ar
+            ? 'المستوى ${i + 1}: $label'
+            : 'Level ${i + 1}: $label';
+        expect(find.text(title), findsOneWidget);
+        expect(find.text(label), findsNothing);
+      }
+      expect(find.byIcon(Icons.lock_rounded), findsNWidgets(2));
+      expect(tester.takeException(), isNull);
+    });
+  }
 
   testWidgets('levels bank filters by difficulty and opens an exercise', (
     tester,

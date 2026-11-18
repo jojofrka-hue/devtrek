@@ -219,6 +219,7 @@ class _LessonPageState extends State<LessonPage> {
               child: Row(
                 children: [
                   IconButton(
+                    tooltip: s.isArabic ? 'إغلاق' : 'Close',
                     icon: Icon(
                       Icons.close,
                       color: desktopPalette(context).subtle,
@@ -355,6 +356,7 @@ class _LessonPageState extends State<LessonPage> {
           child: Row(
             children: [
               IconButton(
+                tooltip: s.isArabic ? 'إغلاق' : 'Close',
                 icon: Icon(Icons.close, color: desktopPalette(context).subtle),
                 onPressed: () => Navigator.pop(context),
               ),
@@ -382,16 +384,6 @@ class _LessonPageState extends State<LessonPage> {
                 ),
                 const SizedBox(width: 10),
               ],
-              const Icon(Icons.favorite, color: red),
-              const SizedBox(width: 4),
-              Text(
-                '$_hearts',
-                style: const TextStyle(
-                  color: red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                ),
-              ),
             ],
           ),
         ),

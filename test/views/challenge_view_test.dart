@@ -82,7 +82,9 @@ void main() {
     services = await AppServices.create(
       store: MemoryStore(),
       repository: CourseRepository.fromData(
-        courses: [_course(_level([_q('q1', QType.choice)]))],
+        courses: [
+          _course(_level([_q('q1', QType.choice)])),
+        ],
       ),
       clock: () => DateTime(2026, 1, 10, 9),
     );
@@ -128,42 +130,81 @@ void main() {
     expect(find.text('Application'), findsOneWidget);
     expect(find.text('Creation'), findsOneWidget);
     // The first stage banner is understanding, and a question is shown.
-    expect(find.textContaining('Understanding & comprehension'), findsOneWidget);
+    expect(
+      find.textContaining('Understanding & comprehension'),
+      findsOneWidget,
+    );
     expect(find.byType(QuestionView), findsOneWidget);
     expect(find.text('CHECK'), findsOneWidget);
+    expect(find.byIcon(Icons.favorite), findsNothing);
   });
 
-  testWidgets('machine lesson flows concepts → quiz → synthesis and completes', (
+  testWidgets(
+    'machine lesson flows concepts → quiz → synthesis and completes',
+    (tester) async {
+      await pump(
+        tester,
+        const ChallengeView(machineLesson: _lesson, machineIndex: 0),
+      );
+
+      // Stage 1: understanding (key concepts), non-graded.
+      expect(find.byIcon(Icons.favorite), findsNothing);
+      expect(find.text('Key concepts'), findsOneWidget);
+      expect(find.text('Bit'), findsOneWidget);
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+
+      // Stage 2: application (quiz), graded.
+      expect(find.text('Which one?'), findsOneWidget);
+      await tester.tap(find.text('A'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('CHECK'));
+      await tester.pumpAndSettle();
+      expect(find.text('Correct!'), findsOneWidget);
+      await tester.tap(find.text('NEXT'));
+      await tester.pumpAndSettle();
+
+      // Stage 3: creation (synthesis), non-graded, last step.
+      expect(find.text('Synthesize what you learned'), findsOneWidget);
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+
+      // Result: perfect score awards three stars for the machine track.
+      expect(find.text('Level complete!'), findsOneWidget);
+      expect(services.progress.starsFor('machine', 0), 3);
+      expect(services.progress.totalXp, 10);
+      expect(find.text('Hearts'), findsOneWidget);
+      expect(find.text('5'), findsOneWidget);
+    },
+  );
+
+  testWidgets('hidden challenge counter still enforces the mistake budget', (
     tester,
   ) async {
-    await pump(
-      tester,
-      const ChallengeView(machineLesson: _lesson, machineIndex: 0),
+    final course = _course(
+      _level(List.generate(6, (index) => _q('q$index', QType.choice))),
     );
+    await pump(tester, ChallengeView(course: course, levelIndex: 0));
 
-    // Stage 1: understanding (key concepts), non-graded.
-    expect(find.text('Key concepts'), findsOneWidget);
-    expect(find.text('Bit'), findsOneWidget);
-    await tester.tap(find.text('Continue'));
-    await tester.pumpAndSettle();
+    for (var attempt = 0; attempt < 5; attempt++) {
+      expect(find.byType(QuestionView), findsOneWidget);
+      expect(find.byIcon(Icons.favorite), findsNothing);
+      await tester.tap(find.text('B'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('CHECK'));
+      await tester.pumpAndSettle();
+      expect(find.byIcon(Icons.favorite), findsNothing);
+      await tester.tap(find.text('NEXT'));
+      await tester.pumpAndSettle();
+    }
 
-    // Stage 2: application (quiz), graded.
-    expect(find.text('Which one?'), findsOneWidget);
-    await tester.tap(find.text('A'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('CHECK'));
-    await tester.pumpAndSettle();
-    expect(find.text('Correct!'), findsOneWidget);
-    await tester.tap(find.text('NEXT'));
-    await tester.pumpAndSettle();
-
-    // Stage 3: creation (synthesis), non-graded, last step.
-    expect(find.text('Synthesize what you learned'), findsOneWidget);
-    await tester.tap(find.text('Continue'));
-    await tester.pumpAndSettle();
-
-    // Result: perfect score awards three stars for the machine track.
-    expect(find.text('Level complete!'), findsOneWidget);
-    expect(services.progress.starsFor('machine', 0), 3);
+    expect(find.text('Out of hearts!'), findsOneWidget);
+    expect(find.text('Score: 0 / 6'), findsOneWidget);
+    expect(find.text('Hearts'), findsOneWidget);
+    expect(find.byType(QuestionView), findsNothing);
+    expect(services.progress.starsFor('c', 0), 0);
+    expect(services.progress.totalXp, 0);
+    expect(services.progress.isFirstAttempt('c', 0), isFalse);
+    expect(services.review.cardCount, 5);
   });
 }

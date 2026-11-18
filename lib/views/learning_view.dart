@@ -848,7 +848,7 @@ class _CourseModuleCard extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Flexible(
+                            Expanded(
                               child: Text(
                                 level.titleFor(s.isArabic),
                                 maxLines: 1,
@@ -860,21 +860,6 @@ class _CourseModuleCard extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 8),
-                            Text(
-                              difficultyOfIndex(
-                                index,
-                                course.levels.length,
-                              ).label(s.isArabic),
-                              style: TextStyle(
-                                fontSize: 10.5,
-                                fontWeight: FontWeight.bold,
-                                color: difficultyOfIndex(
-                                  index,
-                                  course.levels.length,
-                                ).color,
-                              ),
-                            ),
-                            const Spacer(),
                             starRow(stars, size: 16),
                           ],
                         ),

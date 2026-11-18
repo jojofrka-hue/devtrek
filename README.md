@@ -1,187 +1,187 @@
 # DevTrek
 
-DevTrek is a desktop-first Flutter app that teaches programming fundamentals
-through short guided levels, a filterable bank of individual exercises and a
-real code playground. Progress is earned, not farmed: XP and stars come from
-completing Guided Path levels, while practice drills only sharpen accuracy.
+**A specialized desktop-first learning environment for computer science students.**
 
-Six tracks are available — **C**, **Python**, **Machine Structure**, **C++**,
-**Java** and **JavaScript** — in English, Arabic (full RTL) and French, behind a
-locked dark Material 3 theme.
+DevTrek brings programming fundamentals, computer architecture and hands-on code
+execution into one focused study environment. Built natively with **Flutter
+Desktop**, its Windows application is designed for a desktop sidebar, keyboard
+input and room to read, write and inspect code—not a mobile-only quiz app.
+
+Follow a structured curriculum, practise individual exercises or experiment with
+real C and Python programs locally. Core learning, saved progress and local code
+execution work **offline**, without a hosted compiler service. An optional AI
+tutor extends the built-in explanations when internet access is available.
 
 ## Key features
 
-### Learning
+### Guided Path and Levels Bank: separate learning workflows
 
-- **Guided Path** — three sequential levels per track. A level unlocks only
-  after the previous one earns at least one star, and each level is staged by
-  Bloom's taxonomy: Understanding → Application → Creation.
-- **Levels Bank** — every exercise in the track as a flat list, filterable by
-  challenge type (Understanding, Fix the Code, Memory Trace, Creation) and by
-  difficulty (Beginner, Intermediate, Advanced). A row opens that single
-  exercise immediately, with no level navigation in between.
-- **Practice drills** — bank exercises record accuracy and queue mistakes for
-  review, but award no XP or stars.
-- **Explanation after every check**, with the correct answer revealed on a miss.
+- **Guided Path** provides sequential, unlockable levels with Understanding,
+  Application and Creation activities. Level cards show a single title, earned
+  stars, progress and learning-stage summaries.
+- **Levels Bank** is a flat list of individual exercises, not another copy of
+  the guided level cards. Combine challenge-type filters—**Understanding**,
+  **Fix the Code**, **Memory Trace**, **Creation**—with **Beginner**,
+  **Intermediate** and **Advanced** difficulty filters.
+- **Direct practice** opens one exercise immediately, with answer checking and
+  feedback. Drills contribute to accuracy statistics but award no level XP or
+  stars; progression remains tied to Guided Path completion.
 
-### Code Playground
+### Local, offline C and Python execution
 
-- **C and Python** tabs compile and run real code on Windows with the toolchains
-  installed on the machine (gcc/clang, Python 3): sample programs, stdin, exit
-  code, compile log, a 15 s run timeout and output capped at 256 KB. Missing
-  toolchains are detected and reported instead of failing silently.
-- **Machine** tab — a Register Tracker: a small CPU (R0–R3 plus PC, 16 memory
-  cells) that runs or single-steps assembly-like programs and shows registers
-  and memory changing, with operand validation and sample programs.
+- **C compiler integration:** compile and run programs using an installed
+  **gcc** toolchain, such as MinGW-w64. **clang** is also supported.
+- **Python integration:** execute scripts with an installed **Python 3
+  interpreter**; Python execution does not use gcc.
+- Edit sample programs, provide standard input and inspect program output,
+  compiler diagnostics and exit codes inside the desktop Code Playground.
+- Toolchain detection reports missing compilers or interpreters. Compilation and
+  execution have timeouts, and long output is truncated for display.
+- Execution happens on the student's computer, with no remote execution API.
+  Compilers and interpreters are installed separately, not bundled with DevTrek.
 
-### Progress and motivation
+### Algorithm Trace: C algorithms made visible
 
-- **XP** granted on the first completion of a level only, **1–3 stars** per
-  level, and learner ranks.
-- **Daily streak** with longest-streak tracking; Home shows today's goal and the
-  last completed lesson.
-- **Leitner spaced repetition** (boxes 1–5, intervals 0/1/3/7/16 days). Wrong
-  answers are queued automatically and the due count is surfaced on Home.
-- **12 achievements**, evaluated as challenges are completed.
-- **Statistics** — overall accuracy, per-topic breakdown, XP, streaks, completed
-  levels, stars, question bank size, reviews done and bugs solved.
-- Celebration FX (confetti, shake), mascot, sound and haptic feedback.
+- Three interactive C presets: **Array Sum / Loop**, **Bubble Sort
+  Step-by-Step** and **Linear Search**.
+- **Step** executes one statement or condition, **Run / Pause** controls automatic
+  playback, and **Reset** restores the current preset to its initial state.
+- A highlighted C source line stays synchronized with **Variables Watch**
+  (`i`, `j`, `sum`, `temp`, `target`, and other relevant variables), a visual
+  **Array State** row and a concise English/Arabic explanation of that step.
+- Index markers identify the elements being read or compared; gold highlights
+  distinguish array writes and changed variables. Bubble Sort exposes each
+  assignment in a swap, not just the final exchanged pair.
+- This is a deterministic, read-only **preset simulation**, not a debugger for
+  arbitrary C source or a view into live process memory. It works offline without
+  a compiler; the separate C/Python tabs provide real native execution.
 
-### App shell
+### Computer science content and progress
 
-- Responsive desktop layout: an extended navigation rail on wide windows, a
-  bottom navigation bar on compact ones. The sidebar footer shows the active
-  track and the app version (`v1.0.0`).
-- **Home** stays focused: welcome header, XP/streak/stars, a Continue banner for
-  the active track, a Daily Goal / Recent Activity card, and two tools — Code
-  Playground and Fix the code (six bug-hunt tasks with deterministic validation).
-- **Dark-only** theme. Language and track are chosen during onboarding and
-  persisted; there are no theme or language switchers in the shell, and track
-  changes live in Settings.
-- Works fully offline. The optional **AI tutor** calls a local proxy — the
-  Anthropic API key never ships inside the app.
+- **Programming tracks:** C, Python, C++, Java and JavaScript, each with three
+  guided levels. Native code execution is available for C and Python only.
+- **Machine Structure:** six architecture lessons with quizzes, independent of
+  the Algorithm Trace tool in the Playground.
+- **Focused dashboard:** active-track Continue banner, XP, stars, streaks,
+  Daily Goal / Recent Activity and shortcuts to practice tools.
+- **Learning analytics:** first-completion XP rewards, achievements, per-topic
+  accuracy and a Leitner review queue for recorded mistakes.
+
+### Native desktop interface
+
+- Dark Material 3 interface with a desktop navigation rail and a compact-window
+  layout, rather than a mobile-only navigation experience.
+- A compact footer pinned below Settings shows the selected track—for example,
+  **Active Track: C**—and **v1.0.0**, updating when the track changes.
+- Descriptive hover tooltips support navigation, compiler execution and trace
+  controls. Settings includes an **About DevTrek** card explaining the academic
+  desktop learning environment.
+- Learning headers omit the red heart/lives counter; existing assessment and
+  progression rules are unchanged.
+- Locally persisted profile and progress; track selection is available in Settings.
+- English and Arabic learning content, Arabic right-to-left layout and a
+  partially translated French interface. French course content is not included.
 
 ## Tech stack
 
-| Layer       | Technology                                                           |
-| ----------- | -------------------------------------------------------------------- |
-| UI          | Flutter, Material 3, custom desktop theme and hand-written FX         |
-| Language    | Dart (SDK `^3.13.7`)                                                 |
-| State       | `ChangeNotifier` services behind an inherited `AppScope`              |
-| Persistence | `shared_preferences` — profile, progress, streaks, review, settings    |
-| Content     | JSON assets loaded by `CourseRepository`; architecture lessons in Dart |
-| Networking  | `http`, used only for the local AI proxy                              |
-| i18n        | `flutter_localizations` + `intl`; English / Arabic / French with RTL   |
-| Desktop     | Windows runner (C++) and PowerShell launch scripts                    |
-| AI proxy    | Node 18+ (`server/index.js`), with a Dart fallback when Node is absent |
-| Quality     | `flutter_test` (unit + widget) and `flutter_lints`                    |
+| Area | Technology |
+| --- | --- |
+| Desktop application | Flutter Desktop, Dart (`>=3.13.7 <4.0.0`), native Windows C++ runner |
+| Interface | Material 3, custom dark theme, responsive layouts and Flutter animations |
+| State | `ChangeNotifier` services exposed through an inherited `AppScope` |
+| Persistence | `shared_preferences` for local profile, settings and learning progress |
+| Content | JSON course assets and Dart architecture-lesson definitions |
+| Local execution | Dart `Process` APIs, external gcc/clang and Python 3 |
+| Localization | `flutter_localizations`, `intl` and application string tables |
+| Optional AI | HTTP client with a separate Node.js proxy |
+| Quality | `flutter_test` unit/widget tests and `flutter_lints` |
 
-Dependencies are limited to `flutter_localizations`, `shared_preferences`,
-`http`, `intl` and `cupertino_icons` — no state-management or UI frameworks.
+## Getting started on Windows
 
-## Getting started
+### Prerequisites
+
+- Flutter with a compatible Dart SDK.
+- Visual Studio with **Desktop development with C++** and the Windows SDK for
+  building the native Flutter application.
+- For the Code Playground: **gcc or clang** for C and **Python 3** for Python.
+  Put these executables on `PATH`; they are separate from Flutter's Windows
+  build dependencies.
+
+From the project directory:
 
 ```bash
+flutter doctor -v
 flutter pub get
 flutter run -d windows
 ```
 
-Windows is the primary target. The Playground additionally needs a C compiler
-(gcc or clang) and/or Python 3 available on the machine; everything else works
-without them.
-
-### Run the app together with the AI proxy
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\dev.ps1
-```
-
-The script prepares the Windows build, starts the local proxy (Node when
-installed, otherwise the Dart implementation), waits until it is healthy,
-launches `flutter run -d windows`, and stops the proxy when Flutter exits. In
-VS Code, press **F5** — the bundled launch configuration runs the same flow.
-
-### AI proxy on its own
-
-Copy `server/.env.example` to `server/.env` and put your key there:
+Build a release application:
 
 ```bash
-node server/index.js        # Node 18+, no dependencies
+flutter build windows --release
 ```
 
-`server/.env` is gitignored and excluded from exports; only the placeholder
-example is committed. The app POSTs to `/explain` on `http://localhost:8787`
-(configurable in Settings). If the proxy is down, the app shows a friendly
-message and falls back to the built-in explanation. See
-[`server/README.md`](server/README.md) for endpoints and platform-specific URLs,
-including the Android emulator alias `http://10.0.2.2:8787`.
+Windows is the supported target for local code execution. A browser preview or
+mobile build does not provide the native desktop Playground's execution support.
 
-## Tests and analysis
+> The Playground is not a security sandbox. Programs run with the current
+> user's permissions and can access files and the network. Timeouts and output
+> truncation are usability limits, not isolation; run only code you trust.
+
+## Optional AI tutor
+
+The Flutter client sends explanation requests to a separate local proxy; only
+the proxy communicates with Anthropic. AI requires internet access and a key,
+while built-in explanations remain available offline.
+
+1. Copy `server/.env.example` to `server/.env` and configure
+   `ANTHROPIC_API_KEY` there.
+2. Start the proxy in a separate process:
+
+   ```powershell
+   powershell -NoProfile -ExecutionPolicy Bypass -File scripts\start_proxy.ps1
+   ```
+
+3. Run Flutter from a clean terminal. The default AI server address in Settings
+   is `http://localhost:8787`. Install **Node.js 18+** to run the proxy shipped
+   in this repository.
+4. Stop the proxy after use:
+
+   ```powershell
+   powershell -NoProfile -ExecutionPolicy Bypass -File scripts\stop_proxy.ps1
+   ```
+
+Never put the key in Flutter source, assets or build arguments. `server/.env`
+is gitignored and must be excluded from exports; only the placeholder
+`server/.env.example` belongs in version control. Avoid the combined app/proxy
+launcher with a configured key because it shares environment variables with the
+app. Keep the unauthenticated development proxy private, not publicly exposed.
+
+## Testing
 
 ```bash
 flutter analyze
 flutter test
 ```
 
-**136 tests** cover JSON parsing and content integrity, the XP first-attempt
-rule, streak logic with an injected clock, Leitner scheduling, bug-fix
-validation, achievement predicates, sorting/searching engines, the playground
-runner and its UI wiring, persistence through an in-memory store, and widget
-tests for the shell, dashboard, onboarding, learning tabs, exercise bank and
-practice drills.
+Coverage includes content parsing, persistence, progression rewards, streaks,
+review scheduling, code-runner behavior, onboarding, desktop navigation, level
+cards, bank filtering, direct exercise practice, line-accurate algorithm frames,
+trace playback/reset and desktop tooltips. Widget tests use in-memory
+storage rather than the learner's saved profile.
 
-## Content
+## Project organization
 
-```
-assets/data/index.json          index of content files
-assets/data/courses/*.json      5 courses x 3 levels x 7 questions (105)
-assets/data/bug_hunts.json      6 fix-the-code tasks
-assets/data/placement.json      7 bilingual placement questions
-lib/machine_structure/machine_lessons.dart   6 architecture lessons + quizzes
-```
-
-Each question looks like:
-
-```json
-{
-  "id": "cpp-basics-1",
-  "type": "choice",
-  "topic": "variables",
-  "prompt": "Which line declares a variable?",
-  "promptAr": "أي سطر يعرّف متغيراً؟",
-  "code": null,
-  "options": ["int x = 3;", "x = 3;", "print(x);"],
-  "answer": 0,
-  "explanation": "A declaration includes a type.",
-  "explanationAr": "التعريف يتضمن نوعاً."
-}
-```
-
-To add content, extend a course file (keep `id` unique) and restart the app — no
-code changes are needed.
-
-## Project structure
-
-```
-lib/models/             immutable domain models + JSON parsing
-lib/data/               CourseRepository, achievements catalog
-lib/services/           ChangeNotifier state, storage, streaks, review, AI client
-lib/views/              desktop shell, Home, Learning, Playground, Stats,
-                        onboarding, challenge and exercise flows, FX,
-                        register tracker
-lib/playground/         C/Python code runner and samples
-lib/machine_structure/  architecture lessons and lesson player
-lib/screens/            settings, lesson player, bug hunt, review,
-                        visualizer, achievements
-lib/widgets/            question player, confetti, charts, mascot, shared UI
-lib/i18n/               English/Arabic/French strings
-lib/theme/              colors and Material 3 theme
-server/                 AI proxy (Node, with a Dart fallback)
-scripts/                proxy start/stop, Windows prep, app + proxy launcher
-.vscode/                F5 configuration that starts the proxy before Flutter
-test/                   unit and widget tests, fixtures, in-memory store
-docs/                   design report with Mermaid diagrams
-```
-
-The design write-up — use-case, class and screen-flow diagrams — is in
-[`docs/report.md`](docs/report.md).
+| Location | Responsibility |
+| --- | --- |
+| `lib/views/` | Desktop shell, dashboard, learning modes, Playground, statistics and exercise flows |
+| `lib/playground/` | Native C/Python runner and sample programs |
+| `lib/machine_structure/` | Architecture lessons and quizzes |
+| `lib/models/`, `lib/data/` | Domain models, content repository and achievement catalog |
+| `lib/services/` | Persistence, progress, streaks, review scheduling and AI client |
+| `lib/widgets/`, `lib/theme/`, `lib/i18n/` | Shared components, theming and localization |
+| `lib/screens/` | Settings and supporting lesson/practice screens |
+| `assets/data/` | Bundled course and exercise content |
+| `windows/` | Native Flutter Desktop host |
+| `server/`, `scripts/` | Optional AI proxy and local development launchers |
+| `test/` | Unit and widget regression tests |
