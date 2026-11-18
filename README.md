@@ -96,33 +96,118 @@ tutor extends the built-in explanations when internet access is available.
 | Optional AI | HTTP client with a separate Node.js proxy |
 | Quality | `flutter_test` unit/widget tests and `flutter_lints` |
 
-## Getting started on Windows
+## Setup and installation guide
 
-### Prerequisites
+The commands below use **PowerShell on Windows**. Internet access is needed to
+clone the repository and download dependencies; core learning and local code
+execution work offline after setup.
 
-- Flutter with a compatible Dart SDK.
-- Visual Studio with **Desktop development with C++** and the Windows SDK for
-  building the native Flutter application.
-- For the Code Playground: **gcc or clang** for C and **Python 3** for Python.
-  Put these executables on `PATH`; they are separate from Flutter's Windows
-  build dependencies.
+### Prerequisites & Requirements
 
-From the project directory:
+| Requirement | Purpose and setup |
+| --- | --- |
+| Windows 10/11, 64-bit | Target platform for the native desktop application and local code execution. |
+| Git | Required to clone the project repository. |
+| Flutter SDK | Install Flutter with a Dart SDK compatible with `>=3.13.7 <4.0.0`, and add the Flutter `bin` directory to `PATH`. Dart is included with Flutter. |
+| Visual Studio | Install the **Desktop development with C++** workload, including MSVC, C++ CMake tools and the Windows SDK, to build the Windows application. |
+| Visual Studio Code (optional editor) | Install the **Flutter** and **Dart** extensions. VS Code does **not** replace the Visual Studio C++ build toolchain. |
+| GCC Compiler (MinGW-w64 / MinGW) | Required for local C execution in the Playground. Install a Windows GCC toolchain and add its `bin` directory to `PATH`, for example `C:\MinGW\bin` or `C:\msys64\ucrt64\bin`. This is separate from the MSVC toolchain that builds the Flutter app. |
+| Python 3 (optional) | Required only for the Python Playground; add the interpreter directory to `PATH`. |
+| Node.js 18+ (optional) | Required only for the separate AI proxy described below. |
 
-```bash
-flutter doctor -v
-flutter pub get
-flutter run -d windows
+Algorithm Trace uses built-in simulations and does not require GCC. The C
+Playground also supports clang as an alternative compiler.
+
+### Clone Instructions
+
+Open PowerShell in the directory where you keep development projects:
+
+```powershell
+git clone https://github.com/jojofrka-hue/devtrek.git
+cd devtrek
 ```
 
-Build a release application:
+Run the remaining project commands from this cloned `devtrek` directory, which
+contains the Flutter package manifest.
 
-```bash
+### Environment Setup (.env)
+
+**Recommended:** add the Flutter SDK's `bin` directory and the GCC installation's
+`bin` directory to your Windows **user Path**, then reopen PowerShell or VS Code.
+DevTrek discovers compilers through `PATH` and common installation locations;
+**the Flutter app does not automatically load a `.env` file**.
+
+For an optional, session-only setup, create a local `.devtrek.env` file in your
+Windows home folder (`%USERPROFILE%\.devtrek.env`), **outside the repository**.
+Use these sample entries, replacing the unquoted paths with your installations:
+
+```dotenv
+FLUTTER_BIN=C:\flutter\bin
+GCC_BIN=C:\MinGW\bin
+```
+
+Import only these directory entries into the current PowerShell session:
+
+```powershell
+$localPaths = @{}
+Get-Content -LiteralPath "$env:USERPROFILE\.devtrek.env" | ForEach-Object {
+    if ($_ -match '^(FLUTTER_BIN|GCC_BIN)=(.+)$') {
+        $localPaths[$matches[1]] = $matches[2].Trim()
+    }
+}
+$env:Path = "$($localPaths['FLUTTER_BIN']);$($localPaths['GCC_BIN']);$env:Path"
+```
+
+`FLUTTER_BIN` and `GCC_BIN` are conveniences for this setup snippet, not settings
+read by DevTrek. Launch Flutter from the same terminal so the app inherits the
+updated `PATH`; repeat the import for a new terminal session. Keep local path
+files out of version control and exports.
+
+**Do not add API keys to this desktop path file or import `server/.env` into the
+Flutter terminal.** The optional Anthropic key belongs only in the separate
+proxy's `server/.env`, as described in **Optional AI tutor** below.
+
+Verify the tools before installing project dependencies:
+
+```powershell
+flutter --version
+flutter doctor -v
+gcc --version
+flutter devices
+```
+
+Resolve any Windows toolchain issues reported by `flutter doctor -v` and confirm
+that `flutter devices` lists **Windows**. If GCC is not found, check the compiler
+folder in `PATH`, reopen the terminal and restart DevTrek after correcting it.
+
+### Installation & Running
+
+1. **Install Flutter package dependencies** from the cloned project directory:
+
+   ```powershell
+   flutter pub get
+   ```
+
+2. **Build and launch the Windows desktop app** from the same terminal:
+
+   ```powershell
+   flutter run -d windows
+   ```
+
+3. **Check local C execution:** open **Playground → C**, select a sample and
+   click **Run**. The compiler status and output panel confirm whether GCC was
+   detected and the program ran successfully.
+
+To produce a release build, close any running DevTrek/F5 debug session first,
+then run:
+
+```powershell
 flutter build windows --release
 ```
 
-Windows is the supported target for local code execution. A browser preview or
-mobile build does not provide the native desktop Playground's execution support.
+The release output is in `build\windows\x64\runner\Release\`. When distributing
+it, keep the executable together with its generated DLLs and `data` directory.
+A browser preview or mobile build does not provide native Windows code execution.
 
 > The Playground is not a security sandbox. Programs run with the current
 > user's permissions and can access files and the network. Timeouts and output
